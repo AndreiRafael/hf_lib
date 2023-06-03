@@ -4,6 +4,8 @@
 #include <stdbool.h>
 
 bool hf_path_normalize(char* path);
+bool hf_path_exists(const char* path);
+
 bool hf_path_is_directory(const char* path);
 
 #endif//HF_PATH_H
