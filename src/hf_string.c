@@ -20,6 +20,20 @@ size_t hf_string_length_bytes(const char* string) {
     return len;
 }
 
+size_t hf_string_length_codepoints(const char* string) {
+    size_t len = 0;
+    while(*string) {
+        if((*(string++) & 192) == 192) {//
+            do {
+                string++;
+            } while((*string & 192) == 128);
+        }
+
+        len++;
+    }
+    return len;
+}
+
 bool hf_string_copy(char* buffer, size_t buffer_len, const char* string) {
     if(buffer_len == 0) {
         return false;
@@ -30,12 +44,13 @@ bool hf_string_copy(char* buffer, size_t buffer_len, const char* string) {
         buffer[index++] = *string;
         string++;
     }
+    bool retval = index < (buffer_len - 1);
     while((*string & 192) == 128) {//push index back to start of codepoint if applicable
         string--;
         index--;
     }
     buffer[index] = '\0';
-    return index < (buffer_len - 1);
+    return retval;
 }
 
 bool hf_string_concat(char* buffer, size_t buffer_len, const char* string) {
