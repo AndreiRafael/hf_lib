@@ -22,6 +22,19 @@ int main(int argc, char** argv) {
         assert(!hf_string_copy(buffer, 5, "바나나"));
         assert(hf_string_length_bytes(buffer) == 3);
     }
+    {
+        char buffer[10];
+        assert(hf_string_copy(buffer, 10, "바"));
+        assert(hf_string_concat(buffer, 10, "ço"));
+        assert(hf_string_equal(buffer, "바ço"));
+        assert(hf_string_length_bytes(buffer) == 6);
+        assert(hf_string_length_codepoints(buffer) == 3);
+
+        assert(!hf_string_concat(buffer, 10, "바ço"));
+        assert(hf_string_equal(buffer, "바ço바"));
+        assert(hf_string_length_bytes(buffer) == 9);
+        assert(hf_string_length_codepoints(buffer) == 4);
+    }
 
     return EXIT_SUCCESS;
 }
