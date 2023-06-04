@@ -1,7 +1,8 @@
-#include "../include/hf_path.h"
 #include <windows.h>
 
-static const char preferred_separator = '\\';
+char preferred_separator(void) {
+    return '\\';
+}
 
 bool hf_path_exists(const char* path) {
     DWORD file_type = GetFileAttributesA(path);
