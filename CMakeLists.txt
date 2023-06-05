@@ -27,4 +27,8 @@ if(hf_lib_test)
     add_executable(hf_test_string  ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_string.c)
     target_link_libraries(hf_test_string PUBLIC hf_lib)
     add_test(NAME hf_string COMMAND hf_test_string)
+
+    add_executable(hf_test_path  ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_path.c)
+    target_link_libraries(hf_test_path PUBLIC hf_lib)
+    add_test(NAME hf_path COMMAND hf_test_path)
 endif()

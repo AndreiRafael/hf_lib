@@ -17,10 +17,10 @@ size_t hf_string_length_codepoints(const char* string);
 
 //Copies contents of null terminated string into buffer and null terminates the buffer.
 //Returns false if string couldn't fit into the buffer, in which case the value in the buffer will be truncated and null terminated.
-bool hf_string_copy(char* buffer, size_t buffer_size, const char* string);
+bool hf_string_copy(const char* string, char* buffer, size_t buffer_size);
 
 //Appends null terminated string to the end of null terminated buffer and null terminates the buffer.
 //Returns false if string couldn't fit into the buffer, in which case the value in the buffer will be truncated and null terminated.
-bool hf_string_concat(char* buffer, size_t buffer_size, const char* string);
+bool hf_string_concat(const char* string, char* buffer, size_t buffer_size);
 
 #endif//HF_STRING_H

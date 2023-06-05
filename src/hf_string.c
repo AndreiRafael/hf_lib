@@ -34,7 +34,7 @@ size_t hf_string_length_codepoints(const char* string) {
     return len;
 }
 
-bool hf_string_copy(char* buffer, size_t buffer_size, const char* string) {
+bool hf_string_copy(const char* string, char* buffer, size_t buffer_size) {
     if(buffer_size == 0) {
         return false;
     }
@@ -53,11 +53,11 @@ bool hf_string_copy(char* buffer, size_t buffer_size, const char* string) {
     return retval;
 }
 
-bool hf_string_concat(char* buffer, size_t buffer_size, const char* string) {
+bool hf_string_concat(const char* string, char* buffer, size_t buffer_size) {
     size_t new_len = buffer_size;
     while(*buffer && new_len > 0) {
         buffer++;
         new_len--;
     }
-    return hf_string_copy(buffer, new_len, string);
+    return hf_string_copy(string, buffer, new_len);
 }
