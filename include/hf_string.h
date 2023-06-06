@@ -1,7 +1,10 @@
+//Functions for handling null terminated utf-8 strings using bounds checking by default
+//Dependencies:
+//- stdbool.h
+//- stddef.h
+
 #ifndef HF_STRING_H
 #define HF_STRING_H
-
-//Functions for handling null terminated utf-8 strings using bounds checking by default
 
 #include <stdbool.h>
 #include <stddef.h>
