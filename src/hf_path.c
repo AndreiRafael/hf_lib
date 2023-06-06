@@ -140,7 +140,7 @@ bool hf_path_parent(const char* path, char* buffer, size_t buffer_size) {
 //platform specific implementations handled in respective separate files
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(__WIN32__)
     #include "hf_path_win32.c"
-#elif defined(UNIX) || defined(_UNIX) || defined(__UNIX) || defined(__UNIX__)
+#elif defined(unix) || defined(__unix) || defined(__unix__)
     #include "hf_path_unix.c"
 #else
     #error "Unknown System"

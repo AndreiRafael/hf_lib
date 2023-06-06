@@ -6,7 +6,7 @@
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(__WIN32__)
     #define SEP "\\"
-#elif defined(UNIX) || defined(_UNIX) || defined(__UNIX) || defined(__UNIX__)
+#elif defined(unix) || defined(__unix) || defined(__unix__)
     #define SEP "/"
 #else
     #error "Unknown System"
