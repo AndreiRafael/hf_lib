@@ -3,7 +3,13 @@
 
 #define HF_PATH_MAX_PATH_LENGHT_PLUS_ONE (HF_PATH_MAX_PATH_LENGTH + 1)
 
-char preferred_separator(void);
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(__WIN32__)
+    #define HF_PATH_PREFERRED_SEPARATOR ('\\')
+#elif defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
+    #define HF_PATH_PREFERRED_SEPARATOR ('/')
+#else
+    #error "System not supported"
+#endif
 
 static bool hf_path_internal_is_separator(const char c) {
     return c == '/' || c == '\\';
@@ -90,7 +96,7 @@ bool hf_path_normalize(const char* path, char* buffer, size_t buffer_size) {
     buffer[0] = '\0';
 
     char separator_str[2];
-    separator_str[0] = preferred_separator();
+    separator_str[0] = HF_PATH_PREFERRED_SEPARATOR;
     separator_str[1] = '\0';
 
     int depth = 0;
@@ -104,14 +110,18 @@ bool hf_path_normalize(const char* path, char* buffer, size_t buffer_size) {
             depth--;
         }
         else if(type != ETOKENTYPE_THIS || buffer[0] == '\0') {
-            if(type == ETOKENTYPE_PARENT && hf_path_internal_token_type(buffer) == ETOKENTYPE_THIS) {// . become irrelevant
+            if(type == ETOKENTYPE_PARENT && hf_path_internal_token_type(buffer) == ETOKENTYPE_THIS) {// . became irrelevant
                 buffer[0] = '\0';
             }
 
             if(buffer[0] != '\0') {//put separator before new token
-                hf_string_concat(separator_str, buffer, buffer_size);
+                if(!hf_string_concat(separator_str, buffer, buffer_size)) {
+                    return false;
+                }
             }
-            hf_string_concat(token_buffer, buffer, buffer_size);
+            if(!hf_string_concat(token_buffer, buffer, buffer_size)) {
+                return false;
+            }
 
             if(type == ETOKENTYPE_PARENT) {
                 depth--;
@@ -136,12 +146,3 @@ bool hf_path_parent(const char* path, char* buffer, size_t buffer_size) {
 
     return false;
 }
-
-//platform specific implementations handled in respective separate files
-#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(__WIN32__)
-    #include "hf_path_win32.c"
-#elif defined(unix) || defined(__unix) || defined(__unix__)
-    #include "hf_path_unix.c"
-#else
-    #error "Unknown System"
-#endif
