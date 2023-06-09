@@ -11,16 +11,16 @@
     #error "System not supported"
 #endif
 
-static bool hf_path_internal_is_separator(const char c) {
+static bool internal_hf_path_is_separator(const char c) {
     return c == '/' || c == '\\';
 }
 
 // TODO: return error code instead of true/false !!!
-static bool hf_path_internal_read_token(char* buffer, size_t buffer_size, const char** path_itr) {
+static bool internal_hf_path_read_token(char* buffer, size_t buffer_size, const char** path_itr) {
     size_t index = 0;
     const char* itr = *path_itr;
     while(*itr) {
-        if(hf_path_internal_is_separator(*itr)) {
+        if(internal_hf_path_is_separator(*itr)) {
             if(index > 0) {
                 break;
             }
@@ -46,14 +46,31 @@ static bool hf_path_internal_read_token(char* buffer, size_t buffer_size, const 
 }
 
 //provided path must be normalized!!
-static bool hf_path_internal_delete_token(char* path) {
+static const char* internal_hf_path_last_token(const char* path) {
+    const char* itr = path;
+    while(*itr) {//get to end of string
+        itr++;
+    }
+
+    //go back until a separator or start of path
+    while(itr != path) {
+        if(internal_hf_path_is_separator(*itr)) {
+            break;
+        }
+        itr--;
+    }
+    return itr;
+}
+
+//provided path must be normalized!!
+static bool internal_hf_path_delete_token(char* path) {
     char* itr = path;
     while(*itr) {//get to end of string
         itr++;
     }
 
     //go back until a separator or start of path
-    while(itr != path && !hf_path_internal_is_separator(*itr)) {
+    while(itr != path && !internal_hf_path_is_separator(*itr)) {
         itr--;
     }
 
@@ -79,7 +96,7 @@ typedef enum ETokenType_e {
     ETOKENTYPE_OTHER,
 } ETokenType;
 
-static ETokenType hf_path_internal_token_type(const char* token) {
+static ETokenType internal_hf_path_token_type(const char* token) {
     if(hf_string_equal(token, "..")) {
         return ETOKENTYPE_PARENT;
     }
@@ -102,15 +119,15 @@ bool hf_path_normalize(const char* path, char* buffer, size_t buffer_size) {
     int depth = 0;
 
     char token_buffer[HF_PATH_MAX_PATH_LENGHT_PLUS_ONE];
-    while(hf_path_internal_read_token(token_buffer, HF_PATH_MAX_PATH_LENGHT_PLUS_ONE, &path)) {
-        ETokenType type = hf_path_internal_token_type(token_buffer);
+    while(internal_hf_path_read_token(token_buffer, HF_PATH_MAX_PATH_LENGHT_PLUS_ONE, &path)) {
+        ETokenType type = internal_hf_path_token_type(token_buffer);
 
         if(type == ETOKENTYPE_PARENT && depth > 0) {
-            hf_path_internal_delete_token(buffer);
+            internal_hf_path_delete_token(buffer);
             depth--;
         }
         else if(type != ETOKENTYPE_THIS || buffer[0] == '\0') {
-            if(type == ETOKENTYPE_PARENT && hf_path_internal_token_type(buffer) == ETOKENTYPE_THIS) {// . became irrelevant
+            if(type == ETOKENTYPE_PARENT && internal_hf_path_token_type(buffer) == ETOKENTYPE_THIS) {// . became irrelevant
                 buffer[0] = '\0';
             }
 
@@ -137,12 +154,56 @@ bool hf_path_normalize(const char* path, char* buffer, size_t buffer_size) {
 
 bool hf_path_parent(const char* path, char* buffer, size_t buffer_size) {
     char normalized_buffer[HF_PATH_MAX_PATH_LENGHT_PLUS_ONE];
-    if(
-        hf_path_normalize(path, normalized_buffer, HF_PATH_MAX_PATH_LENGHT_PLUS_ONE) &&
-        hf_path_internal_delete_token(normalized_buffer)
-    ) {
-        return hf_string_copy(normalized_buffer, buffer, buffer_size);
+    if(hf_path_normalize(path, normalized_buffer, HF_PATH_MAX_PATH_LENGHT_PLUS_ONE)) {
+        const char* last_token = internal_hf_path_last_token(path);
+        if(hf_string_equal(last_token, ".")) {
+            return hf_string_copy("..", buffer, buffer_size);
+        }
+        if(hf_string_equal(last_token, "..")) {
+            char back_str[4];
+            back_str[0] = HF_PATH_PREFERRED_SEPARATOR;
+            back_str[1] = '.';
+            back_str[2] = '.';
+            back_str[3] = '\0';
+
+            return
+                hf_string_copy(normalized_buffer, buffer, buffer_size) &&
+                hf_string_concat(back_str, buffer, buffer_size);
+            ;
+        }
+
+        return
+            internal_hf_path_delete_token(normalized_buffer) &&
+            hf_string_copy(normalized_buffer, buffer, buffer_size)
+        ;
     }
 
     return false;
+}
+
+bool hf_path_extension(const char* path, char* buffer, size_t buffer_size) {
+    if(buffer_size == 0) {
+        return false;
+    }
+
+    const char* last_token = internal_hf_path_last_token(path);
+    if(hf_string_equal(last_token, ".") || hf_string_equal(last_token, "..")) {
+        buffer[0] = '\0';
+        return true;
+    }
+
+    const char* itr = last_token;
+    const char* copy_position = itr;
+    while(*itr) {
+        if(*itr == '.') {
+            copy_position = itr;
+        }
+        itr++;
+    }
+
+    if(copy_position != last_token) {
+        return hf_string_copy(copy_position, buffer, buffer_size);
+    }
+    buffer[0] = '\0';
+    return true;
 }
