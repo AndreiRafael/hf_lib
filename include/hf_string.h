@@ -26,4 +26,7 @@ bool hf_string_copy(const char* string, char* buffer, size_t buffer_size);
 //Returns false if string couldn't fit into the buffer, in which case the value in the buffer will be truncated and null terminated.
 bool hf_string_concat(const char* string, char* buffer, size_t buffer_size);
 
+bool hf_string_to_lower(const char* string, char* buffer, size_t buffer_size);
+bool hf_string_to_upper(const char* string, char* buffer, size_t buffer_size);
+
 #endif//HF_STRING_H
