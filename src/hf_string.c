@@ -424,20 +424,7 @@ static bool internal_hf_string_to_case(const char* string, char* buffer, size_t 
             break;
         }
 
-        char* buffer_itr = &buffer[buffer_index];
-        do {//copy original codepoint to buffer
-            if(buffer_index >= (buffer_size - 1)) {//could not fit buffer, erase previous codepoint
-                retval = false;
-                while((buffer[buffer_index] & HF_STRING_MASK_UTF8_START) != HF_STRING_MASK_UTF8_START && buffer_index > 0) {
-                    buffer_index--;
-                }
-                goto out;
-            }
-            buffer[buffer_index++] = *itr;
-            itr++;
-        } while((*itr & HF_STRING_MASK_UTF8_START) == HF_STRING_MASK_UTF8_CONTINUATION);
-
-        long unicode = internal_hf_string_utf8_to_unicode(buffer_itr);
+        long unicode = internal_hf_string_utf8_to_unicode(itr);
         long(*conversion_func)(long, long*, size_t, long*, size_t, long*, size_t, long*, size_t) = to_upper ?
             internal_hf_string_unicode_to_upper :
             internal_hf_string_unicode_to_lower
@@ -449,9 +436,31 @@ static bool internal_hf_string_to_case(const char* string, char* buffer, size_t 
             triplet_table, triplet_table_len,
             direct_table, direct_table_len
         );
+
+        const char* to_copy;
+        char new_buffer[5] = { '\0' };
         if(unicode != new_unicode) {
-            internal_hf_string_set_utf8_from_unicode(buffer_itr, new_unicode);
+            internal_hf_string_set_utf8_from_unicode(new_buffer, new_unicode);
+            to_copy = new_buffer;
         }
+        else {
+            to_copy = itr;
+        }
+
+        do {//copy character into buffer
+            if(buffer_index >= (buffer_size - 1)) {//could not fit buffer, erase previous codepoint
+                retval = false;
+                while((buffer[buffer_index] & HF_STRING_MASK_UTF8_START) != HF_STRING_MASK_UTF8_START && buffer_index > 0) {
+                    buffer_index--;
+                }
+                goto out;
+            }
+            buffer[buffer_index++] = *to_copy;
+            to_copy++;
+        } while((*to_copy & HF_STRING_MASK_UTF8_START) == HF_STRING_MASK_UTF8_CONTINUATION);
+
+        //step itr into next character
+        do { itr++; } while((*itr & HF_STRING_MASK_UTF8_START) == HF_STRING_MASK_UTF8_CONTINUATION);
     }
     out:
 
