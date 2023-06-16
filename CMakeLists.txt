@@ -1,3 +1,4 @@
+cmake_minimum_required(VERSION 3.0)
 project(hf_lib C)
 
 set(hf_lib_sources
