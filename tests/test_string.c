@@ -68,6 +68,12 @@ int main(int argc, char** argv) {
 
         assert(hf_string_to_lower("ŻONAĿ", buffer, 10));
         assert(hf_string_equal(buffer, "żonaŀ"));
+
+        assert(hf_string_to_upper("ǅǆ", buffer, 10));
+        assert(hf_string_equal(buffer, "ǄǄ"));
+
+        assert(hf_string_to_lower("ǅǄ", buffer, 10));
+        assert(hf_string_equal(buffer, "ǆǆ"));
     }
 
     return EXIT_SUCCESS;

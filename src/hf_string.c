@@ -123,60 +123,100 @@ static void internal_hf_string_set_utf8_from_unicode(char* string, long unicode)
     }
 }
 
-static bool internal_hf_string_lookup_range(char* input, const long* table, size_t table_size, bool to_upper) {
-    for(size_t i = 0; i < table_size; i++) {
-        size_t key_start_index = to_upper ? ((i * 4) + 2) : (i * 4);
-        size_t key_end_index = to_upper ? ((i * 4) + 3) : ((i * 4) + 1);
-        size_t val_start_index = to_upper ? (i * 4) : ((i * 4) + 2);
+static long internal_hf_string_unicode_to_upper(
+    long unicode_value,
+    long* range_table, size_t range_table_len,
+    long* alternating_table, size_t alternating_table_len,
+    long* triplet_table, size_t triplet_table_len,
+    long* direct_table, size_t direct_table_len
+) {
+    for(size_t i = 0; i < range_table_len; i++) {
+        long offset = range_table[i * 3 + 2];
+        long start = range_table[i * 3] + offset;
+        long end = range_table[i * 3 + 1] + offset;
 
-        long key_start_unicode = table[key_start_index];
-        long key_end_unicode = table[key_end_index];
-        long val_start_unicode = table[val_start_index];
-
-        long input_unicode = internal_hf_string_utf8_to_unicode(input);
-        long diff = val_start_unicode - key_start_unicode;
-
-        if(input_unicode >= key_start_unicode && input_unicode <= key_end_unicode) {
-            internal_hf_string_set_utf8_from_unicode(input, input_unicode + diff);
-            return true;
+        if(unicode_value >= start && unicode_value <= end) {
+            return unicode_value - offset;
         }
     }
-    return false;
+
+    for(size_t i = 0; i < alternating_table_len; i++) {
+        long start = alternating_table[i * 2];
+        long end = alternating_table[i * 2 + 1] + 1;
+
+        long dist_to_start = unicode_value - start;
+        if(unicode_value >= start && unicode_value <= end) {
+            return unicode_value - (dist_to_start % 2);
+        }
+    }
+
+    for(size_t i = 0; i < triplet_table_len; i++) {
+        long start = triplet_table[i * 2];
+        long end = triplet_table[i * 2 + 1] + 2;
+
+        long dist_to_start = unicode_value - start;
+        if(unicode_value >= start && unicode_value <= end) {
+            return unicode_value - (dist_to_start % 3);
+        }
+    }
+
+    for(size_t i = 0; i < direct_table_len; i++) {
+        long key = direct_table[i * 2 + 1];
+
+        if(unicode_value == key) {
+            return direct_table[i * 2];
+        }
+    }
+
+    return unicode_value;
 }
 
-static bool internal_hf_string_lookup_alternating(char* input, const long* table, size_t table_size, bool to_upper) {
-    for(size_t i = 0; i < table_size; i++) {
-        size_t key_start_index = i * 2;
-        size_t key_end_index = (i * 2) + 1;
+static long internal_hf_string_unicode_to_lower(
+    long unicode_value,
+    long* range_table, size_t range_table_len,
+    long* alternating_table, size_t alternating_table_len,
+    long* triplet_table, size_t triplet_table_len,
+    long* direct_table, size_t direct_table_len
+) {
+    for(size_t i = 0; i < range_table_len; i++) {
+        long offset = range_table[i * 3 + 2];
+        long start = range_table[i * 3];
+        long end = range_table[i * 3 + 1];
 
-        long key_start_unicode = table[key_start_index] + (to_upper ? 1 : 0);
-        long key_end_unicode = table[key_end_index] + (to_upper ? 1 : 0);
-
-        long input_unicode = internal_hf_string_utf8_to_unicode(input);
-
-        if(input_unicode >= key_start_unicode && input_unicode <= key_end_unicode && ((input_unicode - key_start_unicode) % 2) == 0) {
-            internal_hf_string_set_utf8_from_unicode(input, input_unicode + (to_upper ? -1 : 1));
-            return true;
+        if(unicode_value >= start && unicode_value <= end) {
+            return unicode_value + offset;
         }
     }
-    return false;
-}
 
-static bool internal_hf_string_lookup_manual(char* input, const long* table, size_t table_size, bool to_upper) {
-    for(size_t i = 0; i < table_size; i++) {
-        size_t key_index = to_upper ? ((i * 2) + 1) : (i * 2);
-        size_t val_index = to_upper ? (i * 2) : ((i * 2) + 1);
+    for(size_t i = 0; i < alternating_table_len; i++) {
+        long start = alternating_table[i * 2];
+        long end = alternating_table[i * 2 + 1] + 1;
 
-        long key_unicode = table[key_index];
-        long input_unicode = internal_hf_string_utf8_to_unicode(input);
-
-        if(input_unicode == key_unicode) {
-            long val = table[val_index];
-            internal_hf_string_set_utf8_from_unicode(input, val);
-            return true;
+        long shift = 1 - ((unicode_value - start) % 2);
+        if(unicode_value >= start && unicode_value <= end) {
+            return unicode_value + shift;
         }
     }
-    return false;
+
+    for(size_t i = 0; i < triplet_table_len; i++) {
+        long start = triplet_table[i * 2];
+        long end = triplet_table[i * 2 + 1] + 2;
+
+        long shift = 2 - ((unicode_value - start) % 3);
+        if(unicode_value >= start && unicode_value <= end) {
+            return unicode_value + shift;
+        }
+    }
+
+    for(size_t i = 0; i < direct_table_len; i++) {
+        long key = direct_table[i * 2];
+
+        if(unicode_value == key) {
+            return direct_table[i * 2 + 1];
+        }
+    }
+
+    return unicode_value;
 }
 
 static bool internal_hf_string_to_case(const char* string, char* buffer, size_t buffer_size, bool to_upper) {
@@ -186,54 +226,54 @@ static bool internal_hf_string_to_case(const char* string, char* buffer, size_t 
 
     //auto-generated conversion tables based on https://www.unicode.org/Public/UCD/latest/ucd/UnicodeData.txt
     long range_table[] = {
-        65, 90, 97, 122,
-        192, 214, 224, 246,
-        216, 222, 248, 254,
-        393, 394, 598, 599,
-        433, 434, 650, 651,
-        904, 906, 941, 943,
-        910, 911, 973, 974,
-        913, 939, 945, 971,
-        1021, 1023, 891, 893,
-        1024, 1039, 1104, 1119,
-        1040, 1071, 1072, 1103,
-        1329, 1366, 1377, 1414,
-        4256, 4301, 11520, 11565,
-        5024, 5103, 43888, 43967,
-        5104, 5109, 5112, 5117,
-        7312, 7359, 4304, 4351,
-        7944, 7951, 7936, 7943,
-        7960, 7965, 7952, 7957,
-        7976, 7983, 7968, 7975,
-        7992, 7999, 7984, 7991,
-        8008, 8013, 8000, 8005,
-        8040, 8047, 8032, 8039,
-        8072, 8079, 8064, 8071,
-        8088, 8095, 8080, 8087,
-        8104, 8111, 8096, 8103,
-        8120, 8121, 8112, 8113,
-        8122, 8123, 8048, 8049,
-        8136, 8139, 8050, 8053,
-        8152, 8153, 8144, 8145,
-        8154, 8155, 8054, 8055,
-        8168, 8169, 8160, 8161,
-        8170, 8171, 8058, 8059,
-        8184, 8185, 8056, 8057,
-        8186, 8187, 8060, 8061,
-        8544, 8559, 8560, 8575,
-        9398, 9423, 9424, 9449,
-        11264, 11311, 11312, 11359,
-        11390, 11391, 575, 576,
-        65313, 65338, 65345, 65370,
-        66560, 66599, 66600, 66639,
-        66736, 66771, 66776, 66811,
-        66928, 66965, 66967, 67004,
-        68736, 68786, 68800, 68850,
-        71840, 71871, 71872, 71903,
-        93760, 93791, 93792, 93823,
-        125184, 125217, 125218, 125251,
+        65, 90, 32,
+        192, 214, 32,
+        216, 222, 32,
+        393, 394, 205,
+        433, 434, 217,
+        904, 906, 37,
+        910, 911, 63,
+        913, 939, 32,
+        1021, 1023, -130,
+        1024, 1039, 80,
+        1040, 1071, 32,
+        1329, 1366, 48,
+        4256, 4301, 7264,
+        5024, 5103, 38864,
+        5104, 5109, 8,
+        7312, 7359, -3008,
+        7944, 7951, -8,
+        7960, 7965, -8,
+        7976, 7983, -8,
+        7992, 7999, -8,
+        8008, 8013, -8,
+        8040, 8047, -8,
+        8072, 8079, -8,
+        8088, 8095, -8,
+        8104, 8111, -8,
+        8120, 8121, -8,
+        8122, 8123, -74,
+        8136, 8139, -86,
+        8152, 8153, -8,
+        8154, 8155, -100,
+        8168, 8169, -8,
+        8170, 8171, -112,
+        8184, 8185, -128,
+        8186, 8187, -126,
+        8544, 8559, 16,
+        9398, 9423, 26,
+        11264, 11311, 48,
+        11390, 11391, -10815,
+        65313, 65338, 32,
+        66560, 66599, 40,
+        66736, 66771, 40,
+        66928, 66965, 39,
+        68736, 68786, 64,
+        71840, 71871, 32,
+        93760, 93791, 32,
+        125184, 125217, 34,
     };
-    const size_t range_table_len = sizeof(range_table) / sizeof(range_table[0]) / 4;
+    const size_t range_table_len = sizeof(range_table) / sizeof(range_table[0]) / 3;
 
     long alternating_table[] = {
         256, 302,
@@ -242,100 +282,93 @@ static bool internal_hf_string_to_case(const char* string, char* buffer, size_t 
         330, 374,
         377, 381,
         386, 388,
-        391, 391,
-        395, 395,
-        401, 401,
-        408, 408,
         416, 420,
-        423, 423,
-        428, 428,
-        431, 431,
         435, 437,
-        440, 440,
-        444, 444,
-        453, 453,
-        456, 456,
-        459, 475,
+        461, 475,
         478, 494,
-        498, 500,
         504, 542,
         546, 562,
-        571, 571,
-        577, 577,
         582, 590,
         880, 882,
-        886, 886,
         984, 1006,
-        1015, 1015,
-        1018, 1018,
         1120, 1152,
         1162, 1214,
         1217, 1229,
         1232, 1326,
         7680, 7828,
         7840, 7934,
-        8579, 8579,
-        11360, 11360,
         11367, 11371,
-        11378, 11378,
-        11381, 11381,
         11392, 11490,
         11499, 11501,
-        11506, 11506,
         42560, 42604,
         42624, 42650,
         42786, 42798,
         42802, 42862,
         42873, 42875,
         42878, 42886,
-        42891, 42891,
         42896, 42898,
         42902, 42920,
         42932, 42946,
         42951, 42960,
         42966, 42968,
-        42997, 42997,
     };
     const size_t alternating_table_len = sizeof(alternating_table) / sizeof(alternating_table[0]) / 2;
+
+    long triplet_table[] = {
+        452, 458,
+        497, 497,
+    };
+    const size_t triplet_table_len = sizeof(triplet_table) / sizeof(triplet_table[0]) / 2;
 
     long direct_table[] = {
         304, 105,
         376, 255,
         385, 595,
         390, 596,
+        391, 392,
+        395, 396,
         398, 477,
         399, 601,
         400, 603,
+        401, 402,
         403, 608,
         404, 611,
         406, 617,
         407, 616,
+        408, 409,
         412, 623,
         413, 626,
         415, 629,
         422, 640,
+        423, 424,
         425, 643,
+        428, 429,
         430, 648,
+        431, 432,
         439, 658,
-        452, 454,
-        455, 457,
-        458, 460,
-        497, 499,
+        440, 441,
+        444, 445,
+        500, 501,
         502, 405,
         503, 447,
         544, 414,
         570, 11365,
+        571, 572,
         573, 410,
         574, 11366,
+        577, 578,
         579, 384,
         580, 649,
         581, 652,
+        886, 887,
         895, 1011,
         902, 940,
         908, 972,
         975, 983,
         1012, 952,
+        1015, 1016,
         1017, 1010,
+        1018, 1019,
         1216, 1231,
         7838, 223,
         8025, 8017,
@@ -350,6 +383,8 @@ static bool internal_hf_string_to_case(const char* string, char* buffer, size_t 
         8490, 107,
         8491, 229,
         8498, 8526,
+        8579, 8580,
+        11360, 11361,
         11362, 619,
         11363, 7549,
         11364, 637,
@@ -357,7 +392,11 @@ static bool internal_hf_string_to_case(const char* string, char* buffer, size_t 
         11374, 625,
         11375, 592,
         11376, 594,
+        11378, 11379,
+        11381, 11382,
+        11506, 11507,
         42877, 7545,
+        42891, 42892,
         42893, 613,
         42922, 614,
         42923, 604,
@@ -371,6 +410,7 @@ static bool internal_hf_string_to_case(const char* string, char* buffer, size_t 
         42948, 42900,
         42949, 642,
         42950, 7566,
+        42997, 42998,
     };
     const size_t direct_table_len = sizeof(direct_table) / sizeof(direct_table[0]) / 2;
 
@@ -397,9 +437,21 @@ static bool internal_hf_string_to_case(const char* string, char* buffer, size_t 
             itr++;
         } while((*itr & HF_STRING_MASK_UTF8_START) == HF_STRING_MASK_UTF8_CONTINUATION);
 
-        internal_hf_string_lookup_range(buffer_itr, range_table, range_table_len, to_upper) ||
-        internal_hf_string_lookup_alternating(buffer_itr, alternating_table, alternating_table_len, to_upper) ||
-        internal_hf_string_lookup_manual(buffer_itr, direct_table, direct_table_len, to_upper);
+        long unicode = internal_hf_string_utf8_to_unicode(buffer_itr);
+        long(*conversion_func)(long, long*, size_t, long*, size_t, long*, size_t, long*, size_t) = to_upper ?
+            internal_hf_string_unicode_to_upper :
+            internal_hf_string_unicode_to_lower
+        ;
+        long new_unicode = conversion_func(
+            unicode,
+            range_table, range_table_len,
+            alternating_table, alternating_table_len,
+            triplet_table, triplet_table_len,
+            direct_table, direct_table_len
+        );
+        if(unicode != new_unicode) {
+            internal_hf_string_set_utf8_from_unicode(buffer_itr, new_unicode);
+        }
     }
     out:
 
