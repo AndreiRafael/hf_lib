@@ -31,3 +31,7 @@ add_test(NAME hf_string COMMAND hf_test_string)
 add_executable(hf_test_path  ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_path.c)
 target_link_libraries(hf_test_path PUBLIC hf_lib)
 add_test(NAME hf_path COMMAND hf_test_path)
+
+add_executable(hf_test_algorithm  ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_algorithm.c)
+target_link_libraries(hf_test_algorithm PUBLIC hf_lib)
+add_test(NAME hf_algorithm COMMAND hf_test_algorithm)
