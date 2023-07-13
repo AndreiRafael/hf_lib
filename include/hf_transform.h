@@ -3,7 +3,7 @@
 
 #include "hf_triangle.h"
 
-typedef struct HF_Transform_t {
+typedef struct HF_Transform_s {
     HF_Vec2f position;
     HF_Vec2f scale;
     float rotation;
