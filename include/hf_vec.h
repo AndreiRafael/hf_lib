@@ -1,12 +1,12 @@
 #ifndef HF_VEC_H
 #define HF_VEC_H
 
-typedef struct HF_Vec2f_t {
+typedef struct HF_Vec2f_s {
     float x;
     float y;
 } HF_Vec2f;
 
-typedef struct HF_Vec2i_t {
+typedef struct HF_Vec2i_s {
     int x;
     int y;
 } HF_Vec2i;

@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "hf_vec.h"
 
-typedef struct HF_Line_t {
+typedef struct HF_Line_s {
     HF_Vec2f start;
     HF_Vec2f end;
 } HF_Line;

@@ -4,7 +4,7 @@
 #include <stdbool.h>
 #include "hf_line.h"
 
-typedef struct HF_Triangle_t {
+typedef struct HF_Triangle_s {
     HF_Vec2f a;
     HF_Vec2f b;
     HF_Vec2f c;

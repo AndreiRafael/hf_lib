@@ -52,10 +52,7 @@ HF_Vec2f hf_vec2f_lerp(HF_Vec2f a, HF_Vec2f b, float factor) {
 
 HF_Vec2f hf_vec2f_normalize(HF_Vec2f vec) {
     float mag = hf_vec2f_magnitude(vec);
-    if(mag > 0.f) {
-        return hf_vec2f_divide(vec, mag);
-    }
-    return (HF_Vec2f){ 1.f, 0.f };
+    return hf_vec2f_divide(vec, mag);
 }
 
 float hf_vec2f_sqr_magnitude(HF_Vec2f vec) {
