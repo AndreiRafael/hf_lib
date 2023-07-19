@@ -7,8 +7,6 @@ set(hf_lib_sources
     hf_memory.c
     hf_path.c
     hf_string.c
-    hf_transform.c
-    hf_triangle.c
     hf_vec.c
 )
 list(TRANSFORM hf_lib_sources PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/src/)
