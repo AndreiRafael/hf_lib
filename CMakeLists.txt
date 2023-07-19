@@ -3,7 +3,6 @@ project(hf_lib C)
 
 set(hf_lib_sources
     hf_algorithm.c
-    hf_intersection.c
     hf_line.c
     hf_memory.c
     hf_path.c
