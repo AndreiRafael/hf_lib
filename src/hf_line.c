@@ -18,9 +18,6 @@ HF_Vec2f hf_line2f_closest_point(HF_Line2f line, HF_Vec2f point) {
 }
 
 bool hf_line2f_intersection(HF_Line2f a, HF_Line2f b, HF_Vec2f* hit_point) {
-    //line overlap algorithm:
-    //1. check if lines overlap
-    //2. check if second line would intersect an infinite first line
     HF_Vec2f a_vec = hf_vec2f_subtract(a.end, a.start);
     {//use dot to check if a is between the points of b
         HF_Vec2f a_vec90 = { a_vec.y, -a_vec.x };//a vector but rotated by 90 degrees
@@ -46,7 +43,40 @@ bool hf_line2f_intersection(HF_Line2f a, HF_Line2f b, HF_Vec2f* hit_point) {
     }
 
     if(hit_point) {
-        *hit_point = hf_line2f_closest_point(a, b.start);
+        float a_run = (a.end.x - a.start.x);
+        float b_run = (b.end.x - b.start.x);
+
+        if(a_run == 0.f) {//a is straight up
+            float b_slope = (b.end.y - b.start.y) / b_run;
+            float b_start_y = b.start.y + (b_slope * -b.start.x);
+
+            *hit_point = (HF_Vec2f){
+                a.start.x,
+                b_slope * a.start.x + b_start_y
+            };
+        }
+        else if(b_run == 0.f) {//b is straight up
+            float a_slope = (a.end.y - a.start.y) / a_run;
+            float a_start_y = a.start.y + (a_slope * -a.start.x);
+
+            *hit_point = (HF_Vec2f){
+                b.start.x,
+                a_slope * b.start.x + a_start_y
+            };
+        }
+        else {//normal equation
+            float a_slope = (a.end.y - a.start.y) / a_run;
+            float b_slope = (b.end.y - b.start.y) / b_run;
+
+            float a_start_y = a.start.y + (a_slope * -a.start.x);
+            float b_start_y = b.start.y + (b_slope * -b.start.x);
+
+            float x = (b_start_y - a_start_y) / (a_slope - b_slope);
+            *hit_point = (HF_Vec2f){
+                x,
+                a_slope * x + a_start_y
+            };
+        }
     }
     return true;
 }
