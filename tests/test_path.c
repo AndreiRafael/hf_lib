@@ -31,6 +31,9 @@ int main(int argc, char** argv) {
 
         assert(hf_path_normalize(".", buffer, HF_PATH_MAX_PATH_LENGTH));//.
         assert(hf_string_equal(buffer, "."));
+
+        assert(hf_path_normalize(ROOT "/./file.png", buffer, HF_PATH_MAX_PATH_LENGTH));//absolute path normalization
+        assert(hf_string_equal(buffer, ROOT SEP "file.png"));
     }
     {
         char buffer[HF_PATH_MAX_PATH_LENGTH];

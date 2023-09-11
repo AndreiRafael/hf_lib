@@ -5,8 +5,10 @@
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(__WIN32__)
     #define HF_PATH_PREFERRED_SEPARATOR ('\\')
+    #define HF_PATH_WIN32
 #elif defined(unix) || defined(__unix) || defined(__unix__) || defined(__APPLE__)
     #define HF_PATH_PREFERRED_SEPARATOR ('/')
+    #define HF_PATH_UNIX
 #else
     #error "System not supported"
 #endif
@@ -76,6 +78,40 @@ static bool internal_hf_path_delete_token(char* path) {
 
     *itr = '\0';
     return itr != path;
+}
+
+bool hf_path_valid(const char* path) {
+#if defined(HF_PATH_WIN32)
+    const char reserved_characters[] = { '<', '>', ':', '\"', '/', '\\', '|', '?', '*' };
+    const char* reserved_names[] = {
+        "con",
+        "prn",
+        "aux",
+        "nul",
+        "com0", "com1", "com2", "com3", "com4", "com5", "com6", "com7", "com8", "com9",
+        "lpt0", "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9",
+    };
+    (void)reserved_names;// TODO: check forbidden names
+    char token_buffer[HF_PATH_MAX_PATH_LENGHT_PLUS_ONE];
+    const char* itr = path;
+    while(internal_hf_path_read_token(token_buffer, HF_PATH_MAX_PATH_LENGHT_PLUS_ONE, &itr)) {
+        for(size_t i = 0; i < sizeof(reserved_characters) / sizeof(char); i++) {
+            const char char_to_check = reserved_characters[i];
+
+            char* buffer_itr = token_buffer;
+            while(*buffer_itr) {
+                if(*buffer_itr == char_to_check || char_to_check <= (char)31) {
+                    return false;
+                }
+            }
+        }
+    }
+#elif defined(HF_PATH_UNIX)
+    return true;// TODO:
+#else
+    #error "Unsupported system"
+#endif
+    return true;
 }
 
 bool hf_path_equal(const char* left_path, const char* right_path) {
