@@ -36,6 +36,6 @@ add_executable(hf_test_algorithm  ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_algorit
 target_link_libraries(hf_test_algorithm PUBLIC hf_lib)
 add_test(NAME hf_algorithm COMMAND hf_test_algorithm)
 
-add_executable(hf_test_mat  ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_mat.c)
-target_link_libraries(hf_test_mat PUBLIC hf_lib)
-add_test(NAME hf_mat COMMAND hf_test_mat)
+add_executable(hf_test_transform  ${CMAKE_CURRENT_SOURCE_DIR}/tests/test_transform.c)
+target_link_libraries(hf_test_transform PUBLIC hf_lib)
+add_test(NAME hf_transform COMMAND hf_test_transform)

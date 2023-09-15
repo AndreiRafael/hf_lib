@@ -32,10 +32,63 @@ HF_Mat4f hf_transform_rotation_cached(HF_Vec3f vec, float sin_rad, float cos_rad
     return out;
 }
 
+HF_Mat4f hf_transform_rotation_x(float rad) {
+    return hf_transform_rotation_x_cached(sinf(rad), cosf(rad));
+}
+
+HF_Mat4f hf_transform_rotation_x_cached(float sin_rad, float cos_rad) {
+    HF_Mat4f out = hf_mat4f_identity();
+
+    out.values[1][1] = cos_rad;
+    out.values[2][1] = -sin_rad;
+
+    out.values[1][2] = sin_rad;
+    out.values[2][2] = cos_rad;
+
+    return out;
+}
+
+HF_Mat4f hf_transform_rotation_y(float rad) {
+    return hf_transform_rotation_y_cached(sinf(rad), cosf(rad));
+}
+
+HF_Mat4f hf_transform_rotation_y_cached(float sin_rad, float cos_rad) {
+    HF_Mat4f out = hf_mat4f_identity();
+
+    out.values[0][0] = cos_rad;
+    out.values[2][0] = sin_rad;
+
+    out.values[0][2] = -sin_rad;
+    out.values[2][2] = cos_rad;
+
+    return out;
+}
+
+HF_Mat4f hf_transform_rotation_z(float rad) {
+    return hf_transform_rotation_z_cached(sinf(rad), cosf(rad));
+}
+
+HF_Mat4f hf_transform_rotation_z_cached(float sin_rad, float cos_rad) {
+    HF_Mat4f out = hf_mat4f_identity();
+
+    out.values[0][0] = cos_rad;
+    out.values[1][0] = -sin_rad;
+
+    out.values[0][1] = sin_rad;
+    out.values[1][1] = cos_rad;
+
+    return out;
+}
+
 HF_Mat4f hf_transform_scale(HF_Vec3f vec) {
     HF_Mat4f out = hf_mat4f_identity();
     out.values[0][0] = vec.x;
     out.values[1][1] = vec.y;
     out.values[2][2] = vec.z;
     return out;
+}
+
+HF_Vec3f hf_transform_apply(HF_Vec3f vec, HF_Mat4f mat) {
+    HF_Mat4f res = (hf_mat4f_multiply_mat4f(hf_transform_translation(vec), mat));
+    return (HF_Vec3f) { res.values[3][0], res.values[3][1], res.values[3][2] };
 }
