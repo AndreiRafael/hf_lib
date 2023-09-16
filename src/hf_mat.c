@@ -1,500 +1,695 @@
 #include "../include/hf_mat.h"
 
-HF_Mat2f hf_mat2f_identity(void) {
-	return (HF_Mat2f) {
-		.values = {
-			{ 1.f, 0.f },
-			{ 0.f, 1.f },
-		}
+#include <string.h>
+
+void hf_mat2f_identity(HF_Mat2f out) {
+	float values[] = {
+		1.f, 0.f,
+		0.f, 1.f,
 	};
+	memcpy(out, values, sizeof(float) * 4);
 }
 
-HF_Mat2f hf_mat2f_multiply(HF_Mat2f mat, float scalar) {
-	HF_Mat2f out_mat;
+void hf_mat2f_transpose(HF_Mat2f mat, HF_Mat2f out) {
+	HF_Mat2f tmp;
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 2; j++) {
-			out_mat.values[i][j] = mat.values[i][j] * scalar;
+			tmp[i][j] = mat[j][i];
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 4);
 }
 
-HF_Mat2f hf_mat2f_multiply_mat2f(HF_Mat2f a, HF_Mat2f b) {
-	HF_Mat2f out_mat;
+float hf_mat2f_determinant(HF_Mat2f mat) {
+
+	return mat[0][0] * mat[1][1] - mat[1][0] * mat[0][1];
+}
+
+float hf_mat2f_minor(HF_Mat2f mat, int i, int j) {
+	return mat[1 - i][1 - j];
+}
+
+void hf_mat2f_inverse(HF_Mat2f mat, HF_Mat2f out) {
+	float det = hf_mat2f_determinant(mat);
+	if(det == 0.0f) {
+		return;
+	}
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 2; j++) {
-			float val = 0.f;
-			for(int k = 0; k < 2; k++) {
-				val += a.values[i][k] * b.values[k][j];
-			}
-			out_mat.values[i][j] = val;
+			out[j][i] = ((i + j) % 2 == 0 ? 1.f : -1.f) * hf_mat2f_minor(mat, i, j);
 		}
 	}
-	return out_mat;
+	hf_mat2f_multiply(out, 1.f / det, out);
 }
 
-HF_Mat2x3f hf_mat2f_multiply_mat2x3f(HF_Mat2f a, HF_Mat2x3f b) {
-	HF_Mat2x3f out_mat;
+void hf_mat2f_multiply(HF_Mat2f mat, float scalar, HF_Mat2f out) {
 	for(int i = 0; i < 2; i++) {
-		for(int j = 0; j < 3; j++) {
-			float val = 0.f;
-			for(int k = 0; k < 2; k++) {
-				val += a.values[i][k] * b.values[k][j];
-			}
-			out_mat.values[i][j] = val;
+		for(int j = 0; j < 2; j++) {
+			out[i][j] = mat[i][j] * scalar;
 		}
 	}
-	return out_mat;
 }
 
-HF_Mat2x4f hf_mat2f_multiply_mat2x4f(HF_Mat2f a, HF_Mat2x4f b) {
-	HF_Mat2x4f out_mat;
-	for(int i = 0; i < 2; i++) {
-		for(int j = 0; j < 4; j++) {
-			float val = 0.f;
-			for(int k = 0; k < 2; k++) {
-				val += a.values[i][k] * b.values[k][j];
-			}
-			out_mat.values[i][j] = val;
-		}
-	}
-	return out_mat;
-}
-
-HF_Mat2x3f hf_mat2x3f_multiply(HF_Mat2x3f mat, float scalar) {
-	HF_Mat2x3f out_mat;
-	for(int i = 0; i < 2; i++) {
-		for(int j = 0; j < 3; j++) {
-			out_mat.values[i][j] = mat.values[i][j] * scalar;
-		}
-	}
-	return out_mat;
-}
-
-HF_Mat2f hf_mat2x3f_multiply_mat3x2f(HF_Mat2x3f a, HF_Mat3x2f b) {
-	HF_Mat2f out_mat;
+void hf_mat2f_multiply_mat2f(HF_Mat2f a, HF_Mat2f b, HF_Mat2f out) {
+	HF_Mat2f tmp;
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 2; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 4);
 }
 
-HF_Mat2x3f hf_mat2x3f_multiply_mat3f(HF_Mat2x3f a, HF_Mat3f b) {
-	HF_Mat2x3f out_mat;
+void hf_mat2f_multiply_mat2x3f(HF_Mat2f a, HF_Mat2x3f b, HF_Mat2x3f out) {
+	HF_Mat2x3f tmp;
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 2; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 6);
 }
 
-HF_Mat2x4f hf_mat2x3f_multiply_mat3x4f(HF_Mat2x3f a, HF_Mat3x4f b) {
-	HF_Mat2x4f out_mat;
+void hf_mat2f_multiply_mat2x4f(HF_Mat2f a, HF_Mat2x4f b, HF_Mat2x4f out) {
+	HF_Mat2x4f tmp;
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 2; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 8);
 }
 
-HF_Mat2x4f hf_mat2x4f_multiply(HF_Mat2x4f mat, float scalar) {
-	HF_Mat2x4f out_mat;
+void hf_mat2x3f_transpose(HF_Mat2x3f mat, HF_Mat3x2f out) {
+	HF_Mat3x2f tmp;
 	for(int i = 0; i < 2; i++) {
-		for(int j = 0; j < 4; j++) {
-			out_mat.values[i][j] = mat.values[i][j] * scalar;
+		for(int j = 0; j < 3; j++) {
+			tmp[i][j] = mat[j][i];
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 6);
 }
 
-HF_Mat2f hf_mat2x4f_multiply_mat4x2f(HF_Mat2x4f a, HF_Mat4x2f b) {
-	HF_Mat2f out_mat;
+void hf_mat2x3f_multiply(HF_Mat2x3f mat, float scalar, HF_Mat2x3f out) {
+	for(int i = 0; i < 2; i++) {
+		for(int j = 0; j < 3; j++) {
+			out[i][j] = mat[i][j] * scalar;
+		}
+	}
+}
+
+void hf_mat2x3f_multiply_mat3x2f(HF_Mat2x3f a, HF_Mat3x2f b, HF_Mat2f out) {
+	HF_Mat2f tmp;
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 2; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 4);
 }
 
-HF_Mat2x3f hf_mat2x4f_multiply_mat4x3f(HF_Mat2x4f a, HF_Mat4x3f b) {
-	HF_Mat2x3f out_mat;
+void hf_mat2x3f_multiply_mat3f(HF_Mat2x3f a, HF_Mat3f b, HF_Mat2x3f out) {
+	HF_Mat2x3f tmp;
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 2; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 6);
 }
 
-HF_Mat2x4f hf_mat2x4f_multiply_mat4f(HF_Mat2x4f a, HF_Mat4f b) {
-	HF_Mat2x4f out_mat;
+void hf_mat2x3f_multiply_mat3x4f(HF_Mat2x3f a, HF_Mat3x4f b, HF_Mat2x4f out) {
+	HF_Mat2x4f tmp;
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 2; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 8);
 }
 
-HF_Mat3x2f hf_mat3x2f_multiply(HF_Mat3x2f mat, float scalar) {
-	HF_Mat3x2f out_mat;
+void hf_mat2x4f_transpose(HF_Mat2x4f mat, HF_Mat4x2f out) {
+	HF_Mat4x2f tmp;
+	for(int i = 0; i < 2; i++) {
+		for(int j = 0; j < 4; j++) {
+			tmp[i][j] = mat[j][i];
+		}
+	}
+	memcpy(out, tmp, sizeof(float) * 8);
+}
+
+void hf_mat2x4f_multiply(HF_Mat2x4f mat, float scalar, HF_Mat2x4f out) {
+	for(int i = 0; i < 2; i++) {
+		for(int j = 0; j < 4; j++) {
+			out[i][j] = mat[i][j] * scalar;
+		}
+	}
+}
+
+void hf_mat2x4f_multiply_mat4x2f(HF_Mat2x4f a, HF_Mat4x2f b, HF_Mat2f out) {
+	HF_Mat2f tmp;
+	for(int i = 0; i < 2; i++) {
+		for(int j = 0; j < 2; j++) {
+			float val = 0.f;
+			for(int k = 0; k < 2; k++) {
+				val += a[i][k] * b[k][j];
+			}
+			tmp[i][j] = val;
+		}
+	}
+	memcpy(out, tmp, sizeof(float) * 4);
+}
+
+void hf_mat2x4f_multiply_mat4x3f(HF_Mat2x4f a, HF_Mat4x3f b, HF_Mat2x3f out) {
+	HF_Mat2x3f tmp;
+	for(int i = 0; i < 2; i++) {
+		for(int j = 0; j < 3; j++) {
+			float val = 0.f;
+			for(int k = 0; k < 2; k++) {
+				val += a[i][k] * b[k][j];
+			}
+			tmp[i][j] = val;
+		}
+	}
+	memcpy(out, tmp, sizeof(float) * 6);
+}
+
+void hf_mat2x4f_multiply_mat4f(HF_Mat2x4f a, HF_Mat4f b, HF_Mat2x4f out) {
+	HF_Mat2x4f tmp;
+	for(int i = 0; i < 2; i++) {
+		for(int j = 0; j < 4; j++) {
+			float val = 0.f;
+			for(int k = 0; k < 2; k++) {
+				val += a[i][k] * b[k][j];
+			}
+			tmp[i][j] = val;
+		}
+	}
+	memcpy(out, tmp, sizeof(float) * 8);
+}
+
+void hf_mat3x2f_transpose(HF_Mat3x2f mat, HF_Mat2x3f out) {
+	HF_Mat2x3f tmp;
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 2; j++) {
-			out_mat.values[i][j] = mat.values[i][j] * scalar;
+			tmp[i][j] = mat[j][i];
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 6);
 }
 
-HF_Mat3x2f hf_mat3x2f_multiply_mat2f(HF_Mat3x2f a, HF_Mat2f b) {
-	HF_Mat3x2f out_mat;
+void hf_mat3x2f_multiply(HF_Mat3x2f mat, float scalar, HF_Mat3x2f out) {
+	for(int i = 0; i < 3; i++) {
+		for(int j = 0; j < 2; j++) {
+			out[i][j] = mat[i][j] * scalar;
+		}
+	}
+}
+
+void hf_mat3x2f_multiply_mat2f(HF_Mat3x2f a, HF_Mat2f b, HF_Mat3x2f out) {
+	HF_Mat3x2f tmp;
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 3; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 6);
 }
 
-HF_Mat3f hf_mat3x2f_multiply_mat2x3f(HF_Mat3x2f a, HF_Mat2x3f b) {
-	HF_Mat3f out_mat;
+void hf_mat3x2f_multiply_mat2x3f(HF_Mat3x2f a, HF_Mat2x3f b, HF_Mat3f out) {
+	HF_Mat3f tmp;
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 3; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 9);
 }
 
-HF_Mat3x4f hf_mat3x2f_multiply_mat2x4f(HF_Mat3x2f a, HF_Mat2x4f b) {
-	HF_Mat3x4f out_mat;
+void hf_mat3x2f_multiply_mat2x4f(HF_Mat3x2f a, HF_Mat2x4f b, HF_Mat3x4f out) {
+	HF_Mat3x4f tmp;
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 3; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 12);
 }
 
-HF_Mat3f hf_mat3f_identity(void) {
-	return (HF_Mat3f) {
-		.values = {
-			{ 1.f, 0.f, 0.f },
-			{ 0.f, 1.f, 0.f },
-			{ 0.f, 0.f, 1.f },
-		}
+void hf_mat3f_identity(HF_Mat3f out) {
+	float values[] = {
+		1.f, 0.f, 0.f,
+		0.f, 1.f, 0.f,
+		0.f, 0.f, 1.f,
 	};
+	memcpy(out, values, sizeof(float) * 9);
 }
 
-HF_Mat3f hf_mat3f_multiply(HF_Mat3f mat, float scalar) {
-	HF_Mat3f out_mat;
+void hf_mat3f_transpose(HF_Mat3f mat, HF_Mat3f out) {
+	HF_Mat3f tmp;
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 3; j++) {
-			out_mat.values[i][j] = mat.values[i][j] * scalar;
+			tmp[i][j] = mat[j][i];
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 9);
 }
 
-HF_Mat3x2f hf_mat3f_multiply_mat3x2f(HF_Mat3f a, HF_Mat3x2f b) {
-	HF_Mat3x2f out_mat;
+float hf_mat3f_determinant(HF_Mat3f mat) {
+	HF_Mat2f mat_0, mat_1, mat_2;
+	memcpy(&mat_0[0][0], &mat[1][1], sizeof(float) * 2);
+	memcpy(&mat_0[1][0], &mat[2][1], sizeof(float) * 2);
+	memcpy(&mat_1[0][0], &mat[0][1], sizeof(float) * 2);
+	memcpy(&mat_1[1][0], &mat[2][1], sizeof(float) * 2);
+	memcpy(&mat_2[0][0], &mat[0][1], sizeof(float) * 2);
+	memcpy(&mat_2[1][0], &mat[1][1], sizeof(float) * 2);
+	return
+		+(mat[0][0] * hf_mat2f_determinant(mat_0))
+		-(mat[1][0] * hf_mat2f_determinant(mat_1))
+		+(mat[2][0] * hf_mat2f_determinant(mat_2))
+	;
+}
+
+float hf_mat3f_minor(HF_Mat3f mat, int i, int j) {
+	HF_Mat2f mat_sub;
+	int row = 0;
+	for(int k = 0; k < 3; k++) {
+		if(k == i) {
+			continue;
+		}
+		int col = 0;
+		for(int l = 0; l < 3; l++) {
+			if(l == j) {
+				continue;
+			}
+			mat_sub[row][col] = mat[k][l];
+			col++;
+		}
+		row++;
+	}
+	return hf_mat2f_determinant(mat_sub);
+}
+
+void hf_mat3f_inverse(HF_Mat3f mat, HF_Mat3f out) {
+	float det = hf_mat3f_determinant(mat);
+	if(det == 0.0f) {
+		return;
+	}
+	for(int i = 0; i < 3; i++) {
+		for(int j = 0; j < 3; j++) {
+			out[j][i] = ((i + j) % 2 == 0 ? 1.f : -1.f) * hf_mat3f_minor(mat, i, j);
+		}
+	}
+	hf_mat3f_multiply(out, 1.f / det, out);
+}
+
+void hf_mat3f_multiply(HF_Mat3f mat, float scalar, HF_Mat3f out) {
+	for(int i = 0; i < 3; i++) {
+		for(int j = 0; j < 3; j++) {
+			out[i][j] = mat[i][j] * scalar;
+		}
+	}
+}
+
+void hf_mat3f_multiply_mat3x2f(HF_Mat3f a, HF_Mat3x2f b, HF_Mat3x2f out) {
+	HF_Mat3x2f tmp;
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 3; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 6);
 }
 
-HF_Mat3f hf_mat3f_multiply_mat3f(HF_Mat3f a, HF_Mat3f b) {
-	HF_Mat3f out_mat;
+void hf_mat3f_multiply_mat3f(HF_Mat3f a, HF_Mat3f b, HF_Mat3f out) {
+	HF_Mat3f tmp;
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 3; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 9);
 }
 
-HF_Mat3x4f hf_mat3f_multiply_mat3x4f(HF_Mat3f a, HF_Mat3x4f b) {
-	HF_Mat3x4f out_mat;
+void hf_mat3f_multiply_mat3x4f(HF_Mat3f a, HF_Mat3x4f b, HF_Mat3x4f out) {
+	HF_Mat3x4f tmp;
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 3; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 12);
 }
 
-HF_Mat3x4f hf_mat3x4f_multiply(HF_Mat3x4f mat, float scalar) {
-	HF_Mat3x4f out_mat;
+void hf_mat3x4f_transpose(HF_Mat3x4f mat, HF_Mat4x3f out) {
+	HF_Mat4x3f tmp;
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 4; j++) {
-			out_mat.values[i][j] = mat.values[i][j] * scalar;
+			tmp[i][j] = mat[j][i];
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 12);
 }
 
-HF_Mat3x2f hf_mat3x4f_multiply_mat4x2f(HF_Mat3x4f a, HF_Mat4x2f b) {
-	HF_Mat3x2f out_mat;
+void hf_mat3x4f_multiply(HF_Mat3x4f mat, float scalar, HF_Mat3x4f out) {
+	for(int i = 0; i < 3; i++) {
+		for(int j = 0; j < 4; j++) {
+			out[i][j] = mat[i][j] * scalar;
+		}
+	}
+}
+
+void hf_mat3x4f_multiply_mat4x2f(HF_Mat3x4f a, HF_Mat4x2f b, HF_Mat3x2f out) {
+	HF_Mat3x2f tmp;
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 3; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 6);
 }
 
-HF_Mat3f hf_mat3x4f_multiply_mat4x3f(HF_Mat3x4f a, HF_Mat4x3f b) {
-	HF_Mat3f out_mat;
+void hf_mat3x4f_multiply_mat4x3f(HF_Mat3x4f a, HF_Mat4x3f b, HF_Mat3f out) {
+	HF_Mat3f tmp;
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 3; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 9);
 }
 
-HF_Mat3x4f hf_mat3x4f_multiply_mat4f(HF_Mat3x4f a, HF_Mat4f b) {
-	HF_Mat3x4f out_mat;
+void hf_mat3x4f_multiply_mat4f(HF_Mat3x4f a, HF_Mat4f b, HF_Mat3x4f out) {
+	HF_Mat3x4f tmp;
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 3; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 12);
 }
 
-HF_Mat4x2f hf_mat4x2f_multiply(HF_Mat4x2f mat, float scalar) {
-	HF_Mat4x2f out_mat;
+void hf_mat4x2f_transpose(HF_Mat4x2f mat, HF_Mat2x4f out) {
+	HF_Mat2x4f tmp;
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 2; j++) {
-			out_mat.values[i][j] = mat.values[i][j] * scalar;
+			tmp[i][j] = mat[j][i];
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 8);
 }
 
-HF_Mat4x2f hf_mat4x2f_multiply_mat2f(HF_Mat4x2f a, HF_Mat2f b) {
-	HF_Mat4x2f out_mat;
+void hf_mat4x2f_multiply(HF_Mat4x2f mat, float scalar, HF_Mat4x2f out) {
+	for(int i = 0; i < 4; i++) {
+		for(int j = 0; j < 2; j++) {
+			out[i][j] = mat[i][j] * scalar;
+		}
+	}
+}
+
+void hf_mat4x2f_multiply_mat2f(HF_Mat4x2f a, HF_Mat2f b, HF_Mat4x2f out) {
+	HF_Mat4x2f tmp;
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 4; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 8);
 }
 
-HF_Mat4x3f hf_mat4x2f_multiply_mat2x3f(HF_Mat4x2f a, HF_Mat2x3f b) {
-	HF_Mat4x3f out_mat;
+void hf_mat4x2f_multiply_mat2x3f(HF_Mat4x2f a, HF_Mat2x3f b, HF_Mat4x3f out) {
+	HF_Mat4x3f tmp;
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 4; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 12);
 }
 
-HF_Mat4f hf_mat4x2f_multiply_mat2x4f(HF_Mat4x2f a, HF_Mat2x4f b) {
-	HF_Mat4f out_mat;
+void hf_mat4x2f_multiply_mat2x4f(HF_Mat4x2f a, HF_Mat2x4f b, HF_Mat4f out) {
+	HF_Mat4f tmp;
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 4; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 16);
 }
 
-HF_Mat4x3f hf_mat4x3f_multiply(HF_Mat4x3f mat, float scalar) {
-	HF_Mat4x3f out_mat;
+void hf_mat4x3f_transpose(HF_Mat4x3f mat, HF_Mat3x4f out) {
+	HF_Mat3x4f tmp;
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 3; j++) {
-			out_mat.values[i][j] = mat.values[i][j] * scalar;
+			tmp[i][j] = mat[j][i];
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 12);
 }
 
-HF_Mat4x2f hf_mat4x3f_multiply_mat3x2f(HF_Mat4x3f a, HF_Mat3x2f b) {
-	HF_Mat4x2f out_mat;
+void hf_mat4x3f_multiply(HF_Mat4x3f mat, float scalar, HF_Mat4x3f out) {
+	for(int i = 0; i < 4; i++) {
+		for(int j = 0; j < 3; j++) {
+			out[i][j] = mat[i][j] * scalar;
+		}
+	}
+}
+
+void hf_mat4x3f_multiply_mat3x2f(HF_Mat4x3f a, HF_Mat3x2f b, HF_Mat4x2f out) {
+	HF_Mat4x2f tmp;
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 4; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 8);
 }
 
-HF_Mat4x3f hf_mat4x3f_multiply_mat3f(HF_Mat4x3f a, HF_Mat3f b) {
-	HF_Mat4x3f out_mat;
+void hf_mat4x3f_multiply_mat3f(HF_Mat4x3f a, HF_Mat3f b, HF_Mat4x3f out) {
+	HF_Mat4x3f tmp;
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 4; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 12);
 }
 
-HF_Mat4f hf_mat4x3f_multiply_mat3x4f(HF_Mat4x3f a, HF_Mat3x4f b) {
-	HF_Mat4f out_mat;
+void hf_mat4x3f_multiply_mat3x4f(HF_Mat4x3f a, HF_Mat3x4f b, HF_Mat4f out) {
+	HF_Mat4f tmp;
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 4; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 16);
 }
 
-HF_Mat4f hf_mat4f_identity(void) {
-	return (HF_Mat4f) {
-		.values = {
-			{ 1.f, 0.f, 0.f, 0.f },
-			{ 0.f, 1.f, 0.f, 0.f },
-			{ 0.f, 0.f, 1.f, 0.f },
-			{ 0.f, 0.f, 0.f, 1.f },
-		}
+void hf_mat4f_identity(HF_Mat4f out) {
+	float values[] = {
+		1.f, 0.f, 0.f, 0.f,
+		0.f, 1.f, 0.f, 0.f,
+		0.f, 0.f, 1.f, 0.f,
+		0.f, 0.f, 0.f, 1.f,
 	};
+	memcpy(out, values, sizeof(float) * 16);
 }
 
-HF_Mat4f hf_mat4f_multiply(HF_Mat4f mat, float scalar) {
-	HF_Mat4f out_mat;
+void hf_mat4f_transpose(HF_Mat4f mat, HF_Mat4f out) {
+	HF_Mat4f tmp;
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 4; j++) {
-			out_mat.values[i][j] = mat.values[i][j] * scalar;
+			tmp[i][j] = mat[j][i];
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 16);
 }
 
-HF_Mat4x2f hf_mat4f_multiply_mat4x2f(HF_Mat4f a, HF_Mat4x2f b) {
-	HF_Mat4x2f out_mat;
+float hf_mat4f_determinant(HF_Mat4f mat) {
+	HF_Mat3f mat_0, mat_1, mat_2, mat_3;
+	memcpy(&mat_0[0][0], &mat[1][1], sizeof(float) * 3);
+	memcpy(&mat_0[1][0], &mat[2][1], sizeof(float) * 3);
+	memcpy(&mat_0[2][0], &mat[3][1], sizeof(float) * 3);
+	memcpy(&mat_1[0][0], &mat[0][1], sizeof(float) * 3);
+	memcpy(&mat_1[1][0], &mat[2][1], sizeof(float) * 3);
+	memcpy(&mat_1[2][0], &mat[3][1], sizeof(float) * 3);
+	memcpy(&mat_2[0][0], &mat[0][1], sizeof(float) * 3);
+	memcpy(&mat_2[1][0], &mat[1][1], sizeof(float) * 3);
+	memcpy(&mat_2[2][0], &mat[3][1], sizeof(float) * 3);
+	memcpy(&mat_3[0][0], &mat[0][1], sizeof(float) * 3);
+	memcpy(&mat_3[1][0], &mat[1][1], sizeof(float) * 3);
+	memcpy(&mat_3[2][0], &mat[2][1], sizeof(float) * 3);
+	return
+		+(mat[0][0] * hf_mat3f_determinant(mat_0))
+		-(mat[1][0] * hf_mat3f_determinant(mat_1))
+		+(mat[2][0] * hf_mat3f_determinant(mat_2))
+		-(mat[3][0] * hf_mat3f_determinant(mat_3))
+	;
+}
+
+float hf_mat4f_minor(HF_Mat4f mat, int i, int j) {
+	HF_Mat3f mat_sub;
+	int row = 0;
+	for(int k = 0; k < 4; k++) {
+		if(k == i) {
+			continue;
+		}
+		int col = 0;
+		for(int l = 0; l < 4; l++) {
+			if(l == j) {
+				continue;
+			}
+			mat_sub[row][col] = mat[k][l];
+			col++;
+		}
+		row++;
+	}
+	return hf_mat3f_determinant(mat_sub);
+}
+
+void hf_mat4f_inverse(HF_Mat4f mat, HF_Mat4f out) {
+	float det = hf_mat4f_determinant(mat);
+	if(det == 0.0f) {
+		return;
+	}
+	for(int i = 0; i < 4; i++) {
+		for(int j = 0; j < 4; j++) {
+			out[j][i] = ((i + j) % 2 == 0 ? 1.f : -1.f) * hf_mat4f_minor(mat, i, j);
+		}
+	}
+	hf_mat4f_multiply(out, 1.f / det, out);
+}
+
+void hf_mat4f_multiply(HF_Mat4f mat, float scalar, HF_Mat4f out) {
+	for(int i = 0; i < 4; i++) {
+		for(int j = 0; j < 4; j++) {
+			out[i][j] = mat[i][j] * scalar;
+		}
+	}
+}
+
+void hf_mat4f_multiply_mat4x2f(HF_Mat4f a, HF_Mat4x2f b, HF_Mat4x2f out) {
+	HF_Mat4x2f tmp;
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 4; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 8);
 }
 
-HF_Mat4x3f hf_mat4f_multiply_mat4x3f(HF_Mat4f a, HF_Mat4x3f b) {
-	HF_Mat4x3f out_mat;
+void hf_mat4f_multiply_mat4x3f(HF_Mat4f a, HF_Mat4x3f b, HF_Mat4x3f out) {
+	HF_Mat4x3f tmp;
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 4; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 12);
 }
 
-HF_Mat4f hf_mat4f_multiply_mat4f(HF_Mat4f a, HF_Mat4f b) {
-	HF_Mat4f out_mat;
+void hf_mat4f_multiply_mat4f(HF_Mat4f a, HF_Mat4f b, HF_Mat4f out) {
+	HF_Mat4f tmp;
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
 			for(int k = 0; k < 4; k++) {
-				val += a.values[i][k] * b.values[k][j];
+				val += a[i][k] * b[k][j];
 			}
-			out_mat.values[i][j] = val;
+			tmp[i][j] = val;
 		}
 	}
-	return out_mat;
+	memcpy(out, tmp, sizeof(float) * 16);
 }
-
