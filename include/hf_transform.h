@@ -19,6 +19,6 @@ void hf_transform_scale(HF_Vec3f vec, HF_Mat4f out);//create a scale matrix
 
 //TODO: view and perspective
 
-HF_Vec3f hf_transform_apply(HF_Vec3f vec, HF_Mat4f mat);//returns vec transformed by the matrix mat
+void hf_transform_apply(HF_Vec3f vec, HF_Mat4f mat, HF_Vec3f out);//returns vec transformed by the matrix mat
 
 #endif//HF_TRANSFORM_H

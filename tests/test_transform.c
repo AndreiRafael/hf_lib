@@ -39,12 +39,7 @@ void print_mat4f(const char* msg, HF_Mat4f mat) {
 
 void print_vec3(const char* msg, HF_Vec3f vec) {
     printf("%s:\n", msg);
-    printf("{ %.2f %.2f %.2f }\n", vec.x, vec.y, vec.z);
-    printf("{ ");
-    for(int i = 0; i < 3; i++) {
-        printf("%.2f ", ((float*)&vec.x)[i]);
-    }
-    printf("}\n\n");
+    printf("{ %.2f %.2f %.2f }\n", vec[0], vec[1], vec[2]);
 }
 
 int main(int argc, char** argv) {
@@ -114,6 +109,40 @@ int main(int argc, char** argv) {
 
         hf_mat3f_multiply_mat3f(mat3, res3, res3);
         print_mat3f("mat3 x inv: ", res3);
+
+        HF_Mat4f mat4 = {
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            10, 20, 30, 1,
+        };
+
+        HF_Mat4f res4;
+        hf_mat4f_inverse(mat4, res4);
+        print_mat4f("mat4 inverse(-10 -20 -30): ", res4);
+
+        hf_mat4f_multiply_mat4f(mat4, res4, res4);
+        print_mat4f("mat4 x inv: ", res4);
+    }
+
+    {//test transform vector
+        HF_Vec3f vec = { 10.f, 20.f, 30.f };
+        HF_Vec3f res;
+        HF_Mat4f mat;
+
+        print_vec3("original vector", vec);
+
+        hf_transform_rotation_x(3.1415f / 2.f, mat);
+        hf_transform_apply(vec, mat, res);
+        print_vec3("90 x", res);
+
+        hf_transform_rotation_y(3.1415f / 2.f, mat);
+        hf_transform_apply(vec, mat, res);
+        print_vec3("90 y", res);
+
+        hf_transform_rotation_z(3.1415f / 2.f, mat);
+        hf_transform_apply(vec, mat, res);
+        print_vec3("90 z", res);
     }
 
     return 0;

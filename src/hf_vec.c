@@ -1,184 +1,172 @@
 #include "../include/hf_vec.h"
+
+#include <string.h>
 #include <math.h>
 
-//HF_Vec2f
-HF_Vec2f hf_vec2f_add(HF_Vec2f a, HF_Vec2f b) {
-    return (HF_Vec2f) {
-        a.x + b.x,
-        a.y + b.y
-    };
+void hf_vec2f_copy(HF_Vec2f vec, HF_Vec2f out) {
+	memcpy(out, vec, sizeof(out[0]) * 2);
 }
 
-HF_Vec2f hf_vec2f_subtract(HF_Vec2f a, HF_Vec2f b) {
-    return (HF_Vec2f){
-        a.x - b.x,
-        a.y - b.y
-    };
+void hf_vec2f_add(HF_Vec2f a, HF_Vec2f b, HF_Vec2f out) {
+	out[0] = a[0] + b[0];
+	out[1] = a[1] + b[1];
 }
 
-HF_Vec2f hf_vec2f_multiply(HF_Vec2f vec, float scalar) {
-    return (HF_Vec2f){
-        vec.x * scalar,
-        vec.y * scalar
-    };
+void hf_vec2f_subtract(HF_Vec2f a, HF_Vec2f b, HF_Vec2f out) {
+	out[0] = a[0] - b[0];
+	out[1] = a[1] - b[1];
 }
 
-HF_Vec2f hf_vec2f_divide(HF_Vec2f vec, float scalar) {
-    return (HF_Vec2f){
-        vec.x / scalar,
-        vec.y / scalar
-    };
+void hf_vec2f_multiply(HF_Vec2f vec, float scalar, HF_Vec2f out) {
+	out[0] = vec[0] * scalar;
+	out[1] = vec[1] * scalar;
 }
 
-HF_Vec2f hf_vec2f_rotate(HF_Vec2f vec, float rad) {
-    float sin_rad = sinf(rad);
-    float cos_rad = cosf(rad);
-    return hf_vec2f_rotate_cached(vec, sin_rad, cos_rad);
+void hf_vec2f_divide(HF_Vec2f vec, float scalar, HF_Vec2f out) {
+	out[0] = vec[0] / scalar;
+	out[1] = vec[1] / scalar;
 }
 
-HF_Vec2f hf_vec2f_rotate_cached(HF_Vec2f vec, float sin_rad, float cos_rad) {
-    return (HF_Vec2f) {
-        vec.x * cos_rad - vec.y * sin_rad,
-        vec.y * cos_rad + vec.x * sin_rad
-    };
-}
-
-HF_Vec2f hf_vec2f_lerp(HF_Vec2f a, HF_Vec2f b, float factor) {
-    return hf_vec2f_add(
-        hf_vec2f_multiply(a, 1.f - factor),
-        hf_vec2f_multiply(b, factor)
-    );
-}
-
-HF_Vec2f hf_vec2f_normalize(HF_Vec2f vec) {
-    float mag = hf_vec2f_magnitude(vec);
-    return hf_vec2f_divide(vec, mag);
-}
-
-float hf_vec2f_sqr_magnitude(HF_Vec2f vec) {
-    return vec.x * vec.x + vec.y * vec.y;
+float hf_vec2f_square_magnitude(HF_Vec2f vec) {
+	return vec[0] * vec[0] + vec[1] * vec[1];
 }
 
 float hf_vec2f_magnitude(HF_Vec2f vec) {
-    return sqrtf(hf_vec2f_sqr_magnitude(vec));
+	return sqrtf(hf_vec2f_square_magnitude(vec));
 }
 
 float hf_vec2f_dot(HF_Vec2f a, HF_Vec2f b) {
-    return a.x * b.x + a.y * b.y;
+	return a[0] * b[0] + a[1] * b[1];
 }
 
-float hf_vec2f_angle(HF_Vec2f vec) {
-    return atan2f(vec.y, vec.x);
+void hf_vec2i_copy(HF_Vec2i vec, HF_Vec2i out) {
+	memcpy(out, vec, sizeof(out[0]) * 2);
 }
 
-
-//HF_Vec2i
-HF_Vec2i hf_vec2i_add(HF_Vec2i a, HF_Vec2i b) {
-    return (HF_Vec2i){
-        a.x + b.x,
-        a.y + b.y
-    };
+void hf_vec2i_add(HF_Vec2i a, HF_Vec2i b, HF_Vec2i out) {
+	out[0] = a[0] + b[0];
+	out[1] = a[1] + b[1];
 }
 
-HF_Vec2i hf_vec2i_subtract(HF_Vec2i a, HF_Vec2i b) {
-    return (HF_Vec2i){
-        a.x - b.x,
-        a.y - b.y
-    };
+void hf_vec2i_subtract(HF_Vec2i a, HF_Vec2i b, HF_Vec2i out) {
+	out[0] = a[0] - b[0];
+	out[1] = a[1] - b[1];
 }
 
-HF_Vec2i hf_vec2i_multiply(HF_Vec2i vec, int scalar) {
-    return (HF_Vec2i){
-        vec.x * scalar,
-        vec.y * scalar
-    };
+void hf_vec2i_multiply(HF_Vec2i vec, int scalar, HF_Vec2i out) {
+	out[0] = vec[0] * scalar;
+	out[1] = vec[1] * scalar;
 }
 
-HF_Vec2i hf_vec2i_divide(HF_Vec2i vec, int scalar) {
-    return (HF_Vec2i){
-        vec.x / scalar,
-        vec.y / scalar
-    };
+void hf_vec2i_divide(HF_Vec2i vec, int scalar, HF_Vec2i out) {
+	out[0] = vec[0] / scalar;
+	out[1] = vec[1] / scalar;
 }
 
-int hf_vec2i_sqr_magnitude(HF_Vec2i vec) {
-    return vec.x * vec.x + vec.y * vec.y;
+int hf_vec2i_square_magnitude(HF_Vec2i vec) {
+	return vec[0] * vec[0] + vec[1] * vec[1];
 }
 
 float hf_vec2i_magnitude(HF_Vec2i vec) {
-    return sqrtf((float)hf_vec2i_sqr_magnitude(vec));
+	return sqrtf((float)hf_vec2i_square_magnitude(vec));
 }
 
 int hf_vec2i_dot(HF_Vec2i a, HF_Vec2i b) {
-    return a.x * b.x + a.y * b.y;
+	return a[0] * b[0] + a[1] * b[1];
 }
 
-float hf_vec2i_angle_rad(HF_Vec2i vec) {
-    return atan2f((float)vec.y, (float)vec.x);
+void hf_vec3f_copy(HF_Vec3f vec, HF_Vec3f out) {
+	memcpy(out, vec, sizeof(out[0]) * 3);
 }
 
-
-//HF_Vec3f
-HF_Vec3f hf_vec3f_add(HF_Vec3f a, HF_Vec3f b) {
-    return (HF_Vec3f) {
-        a.x + b.x,
-        a.y + b.y,
-        a.z + b.z
-    };
+void hf_vec3f_add(HF_Vec3f a, HF_Vec3f b, HF_Vec3f out) {
+	out[0] = a[0] + b[0];
+	out[1] = a[1] + b[1];
+	out[2] = a[2] + b[2];
 }
 
-HF_Vec3f hf_vec3f_subtract(HF_Vec3f a, HF_Vec3f b) {
-    return (HF_Vec3f) {
-        a.x - b.x,
-        a.y - b.y,
-        a.z - b.z
-    };
+void hf_vec3f_subtract(HF_Vec3f a, HF_Vec3f b, HF_Vec3f out) {
+	out[0] = a[0] - b[0];
+	out[1] = a[1] - b[1];
+	out[2] = a[2] - b[2];
 }
 
-HF_Vec3f hf_vec3f_multiply(HF_Vec3f vec, float scalar) {
-    return (HF_Vec3f) {
-        vec.x * scalar,
-        vec.y * scalar,
-        vec.z * scalar
-    };
+void hf_vec3f_multiply(HF_Vec3f vec, float scalar, HF_Vec3f out) {
+	out[0] = vec[0] * scalar;
+	out[1] = vec[1] * scalar;
+	out[2] = vec[2] * scalar;
 }
 
-HF_Vec3f hf_vec3f_divide(HF_Vec3f vec, float scalar) {
-    return (HF_Vec3f) {
-        vec.x / scalar,
-        vec.y / scalar,
-        vec.z / scalar
-    };
+void hf_vec3f_divide(HF_Vec3f vec, float scalar, HF_Vec3f out) {
+	out[0] = vec[0] / scalar;
+	out[1] = vec[1] / scalar;
+	out[2] = vec[2] / scalar;
 }
 
-HF_Vec3f hf_vec3f_lerp(HF_Vec3f a, HF_Vec3f b, float factor) {
-    return hf_vec3f_add(
-        hf_vec3f_multiply(a, 1.f - factor),
-        hf_vec3f_multiply(b, factor)
-    );
-}
-
-HF_Vec3f hf_vec3f_normalize(HF_Vec3f vec) {
-    float mag = hf_vec3f_magnitude(vec);
-    return hf_vec3f_divide(vec, mag);
+float hf_vec3f_square_magnitude(HF_Vec3f vec) {
+	return vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
 }
 
 float hf_vec3f_magnitude(HF_Vec3f vec) {
-    return sqrtf(hf_vec3f_sqr_magnitude(vec));
-}
-
-float hf_vec3f_sqr_magnitude(HF_Vec3f vec) {
-    return vec.x * vec.x + vec.y * vec.y + vec.z * vec.z;
+	return sqrtf(hf_vec3f_square_magnitude(vec));
 }
 
 float hf_vec3f_dot(HF_Vec3f a, HF_Vec3f b) {
-    return a.x * b.x + a.y * b.y + a.z * b.z;
+	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
 
-HF_Vec3f hf_vec3f_cross(HF_Vec3f a, HF_Vec3f b) {
-    return (HF_Vec3f) {
-        a.y * b.z - a.z * b.y,
-        a.z * b.x - a.x * b.z,
-        a.x * b.y - a.y * b.x
-    };
+void hf_vec3f_cross(HF_Vec3f a, HF_Vec3f b, HF_Vec3f out) {
+	HF_Vec3f tmp;
+	tmp[0] = a[1] * b[2] - a[2] * b[1];
+	tmp[1] = a[2] * b[0] - a[0] * b[2];
+	tmp[2] = a[0] * b[1] - a[1] * b[0];
+	memcpy(out, tmp, sizeof(out[0]) * 3);
+}
+
+void hf_vec3i_copy(HF_Vec3i vec, HF_Vec3i out) {
+	memcpy(out, vec, sizeof(out[0]) * 3);
+}
+
+void hf_vec3i_add(HF_Vec3i a, HF_Vec3i b, HF_Vec3i out) {
+	out[0] = a[0] + b[0];
+	out[1] = a[1] + b[1];
+	out[2] = a[2] + b[2];
+}
+
+void hf_vec3i_subtract(HF_Vec3i a, HF_Vec3i b, HF_Vec3i out) {
+	out[0] = a[0] - b[0];
+	out[1] = a[1] - b[1];
+	out[2] = a[2] - b[2];
+}
+
+void hf_vec3i_multiply(HF_Vec3i vec, int scalar, HF_Vec3i out) {
+	out[0] = vec[0] * scalar;
+	out[1] = vec[1] * scalar;
+	out[2] = vec[2] * scalar;
+}
+
+void hf_vec3i_divide(HF_Vec3i vec, int scalar, HF_Vec3i out) {
+	out[0] = vec[0] / scalar;
+	out[1] = vec[1] / scalar;
+	out[2] = vec[2] / scalar;
+}
+
+int hf_vec3i_square_magnitude(HF_Vec3i vec) {
+	return vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
+}
+
+float hf_vec3i_magnitude(HF_Vec3i vec) {
+	return sqrtf((float)hf_vec3i_square_magnitude(vec));
+}
+
+int hf_vec3i_dot(HF_Vec3i a, HF_Vec3i b) {
+	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+}
+
+void hf_vec3i_cross(HF_Vec3i a, HF_Vec3i b, HF_Vec3i out) {
+	HF_Vec3i tmp;
+	tmp[0] = a[1] * b[2] - a[2] * b[1];
+	tmp[1] = a[2] * b[0] - a[0] * b[2];
+	tmp[2] = a[0] * b[1] - a[1] * b[0];
+	memcpy(out, tmp, sizeof(out[0]) * 3);
 }
