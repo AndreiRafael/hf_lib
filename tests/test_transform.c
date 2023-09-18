@@ -37,33 +37,38 @@ void print_mat4f(const char* msg, HF_Mat4f mat) {
     printf("\n");
 }
 
+void print_vec2(const char* msg, HF_Vec2f vec) {
+    printf("%s: ", msg);
+    printf("{ %.2f %.2f }\n", vec[0], vec[1]);
+}
+
 void print_vec3(const char* msg, HF_Vec3f vec) {
-    printf("%s:\n", msg);
+    printf("%s: ", msg);
     printf("{ %.2f %.2f %.2f }\n", vec[0], vec[1], vec[2]);
 }
 
 int main(int argc, char** argv) {
     {
         HF_Mat4f pos;
-        hf_transform_translation((HF_Vec3f){ 1.f, 2.f, 3.f }, pos);
+        hf_transform3f_translation((HF_Vec3f){ 1.f, 2.f, 3.f }, pos);
         print_mat4f("original", pos);
 
         HF_Mat4f res, op;
 
-        hf_transform_rotation((HF_Vec3f){ 0.f, 1.f, 0.f }, 3.1415f / 2.f, op);
+        hf_transform3f_rotation((HF_Vec3f){ 0.f, 1.f, 0.f }, 3.1415f / 2.f, op);
         hf_mat4f_multiply_mat4f(pos, op, res);
 
         print_mat4f("rotate around arbitrary", res);
 
-        hf_transform_rotation_x(3.1415f / 2.f, op);
+        hf_transform3f_rotation_x(3.1415f / 2.f, op);
         hf_mat4f_multiply_mat4f(pos, op, res);
         print_mat4f("rotate around x", res);
 
-        hf_transform_rotation_y(3.1415f / 2.f, op);
+        hf_transform3f_rotation_y(3.1415f / 2.f, op);
         hf_mat4f_multiply_mat4f(pos, op, res);
         print_mat4f("rotate around y", res);
 
-        hf_transform_rotation_z(3.1415f / 2.f, op);
+        hf_transform3f_rotation_z(3.1415f / 2.f, op);
         hf_mat4f_multiply_mat4f(pos, op, res);
         print_mat4f("rotate around z", res);
     }
@@ -96,19 +101,19 @@ int main(int argc, char** argv) {
 
         HF_Mat2f res2;
         hf_mat2f_inverse(mat2, res2);
-        print_mat2f("mat2 inverse(-2 1 1.5 0.5): ", res2);
+        print_mat2f("mat2 inverse(-2 1 1.5 0.5)", res2);
 
         hf_mat2f_multiply_mat2f(mat2, res2, res2);
-        print_mat2f("mat2 x inv: ", res2);
+        print_mat2f("mat2 x inv", res2);
 
         HF_Mat3f mat3 = { 1, 4, 7, 2, 5, 8, 3, 6, -1 };
 
         HF_Mat3f res3;
         hf_mat3f_inverse(mat3, res3);
-        print_mat3f("mat3 inverse(-1.76 0.86 -0.1 1.53 -0.73 0.2 -0.1 0.2 -0.1): ", res3);
+        print_mat3f("mat3 inverse(-1.76 0.86 -0.1 1.53 -0.73 0.2 -0.1 0.2 -0.1)", res3);
 
         hf_mat3f_multiply_mat3f(mat3, res3, res3);
-        print_mat3f("mat3 x inv: ", res3);
+        print_mat3f("mat3 x inv", res3);
 
         HF_Mat4f mat4 = {
             1, 0, 0, 0,
@@ -119,29 +124,54 @@ int main(int argc, char** argv) {
 
         HF_Mat4f res4;
         hf_mat4f_inverse(mat4, res4);
-        print_mat4f("mat4 inverse(-10 -20 -30): ", res4);
+        print_mat4f("mat4 inverse(-10 -20 -30)", res4);
 
         hf_mat4f_multiply_mat4f(mat4, res4, res4);
-        print_mat4f("mat4 x inv: ", res4);
+        print_mat4f("mat4 x inv", res4);
     }
 
-    {//test transform vector
+    {//test transform vector2f
+        HF_Vec2f vec = { 10.f, 20.f };
+        HF_Vec2f res;
+        HF_Mat3f mat;
+
+        print_vec2("original vector2", vec);
+
+        hf_transform2f_rotation(3.1415f / 2.f, mat);
+        hf_transform2f_apply(vec, mat, res);
+        print_vec2("90", res);
+
+        hf_transform2f_rotation(3.1415f, mat);
+        hf_transform2f_apply(vec, mat, res);
+        print_vec2("180", res);
+
+        hf_transform2f_rotation(3.1415f * 1.5f, mat);
+        hf_transform2f_apply(vec, mat, res);
+        print_vec2("270", res);
+
+        HF_Vec2f scale = { 2.f, 3.f };
+        hf_transform2f_scale(scale, mat);
+        hf_transform2f_apply(vec, mat, res);
+        print_vec2("scale", res);
+    }
+
+    {//test transform vector3f
         HF_Vec3f vec = { 10.f, 20.f, 30.f };
         HF_Vec3f res;
         HF_Mat4f mat;
 
-        print_vec3("original vector", vec);
+        print_vec3("original vector3", vec);
 
-        hf_transform_rotation_x(3.1415f / 2.f, mat);
-        hf_transform_apply(vec, mat, res);
+        hf_transform3f_rotation_x(3.1415f / 2.f, mat);
+        hf_transform3f_apply(vec, mat, res);
         print_vec3("90 x", res);
 
-        hf_transform_rotation_y(3.1415f / 2.f, mat);
-        hf_transform_apply(vec, mat, res);
+        hf_transform3f_rotation_y(3.1415f / 2.f, mat);
+        hf_transform3f_apply(vec, mat, res);
         print_vec3("90 y", res);
 
-        hf_transform_rotation_z(3.1415f / 2.f, mat);
-        hf_transform_apply(vec, mat, res);
+        hf_transform3f_rotation_z(3.1415f / 2.f, mat);
+        hf_transform3f_apply(vec, mat, res);
         print_vec3("90 z", res);
     }
 

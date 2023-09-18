@@ -11,6 +11,7 @@ void hf_vec2f_add(HF_Vec2f a, HF_Vec2f b, HF_Vec2f out);
 void hf_vec2f_subtract(HF_Vec2f a, HF_Vec2f b, HF_Vec2f out);
 void hf_vec2f_multiply(HF_Vec2f vec, float scalar, HF_Vec2f out);
 void hf_vec2f_divide(HF_Vec2f vec, float scalar, HF_Vec2f out);
+void hf_vec2f_lerp(HF_Vec2f a, HF_Vec2f b, float t, HF_Vec2f out);
 float hf_vec2f_square_magnitude(HF_Vec2f vec);
 float hf_vec2f_magnitude(HF_Vec2f vec);
 float hf_vec2f_dot(HF_Vec2f a, HF_Vec2f b);
@@ -29,6 +30,7 @@ void hf_vec3f_add(HF_Vec3f a, HF_Vec3f b, HF_Vec3f out);
 void hf_vec3f_subtract(HF_Vec3f a, HF_Vec3f b, HF_Vec3f out);
 void hf_vec3f_multiply(HF_Vec3f vec, float scalar, HF_Vec3f out);
 void hf_vec3f_divide(HF_Vec3f vec, float scalar, HF_Vec3f out);
+void hf_vec3f_lerp(HF_Vec3f a, HF_Vec3f b, float t, HF_Vec3f out);
 float hf_vec3f_square_magnitude(HF_Vec3f vec);
 float hf_vec3f_magnitude(HF_Vec3f vec);
 float hf_vec3f_dot(HF_Vec3f a, HF_Vec3f b);
@@ -43,4 +45,5 @@ int hf_vec3i_square_magnitude(HF_Vec3i vec);
 float hf_vec3i_magnitude(HF_Vec3i vec);
 int hf_vec3i_dot(HF_Vec3i a, HF_Vec3i b);
 void hf_vec3i_cross(HF_Vec3i a, HF_Vec3i b, HF_Vec3i out);
+
 #endif//HF_VEC_H

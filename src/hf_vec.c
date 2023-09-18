@@ -27,6 +27,11 @@ void hf_vec2f_divide(HF_Vec2f vec, float scalar, HF_Vec2f out) {
 	out[1] = vec[1] / scalar;
 }
 
+void hf_vec2f_lerp(HF_Vec2f a, HF_Vec2f b, float t, HF_Vec2f out) {
+	out[0] = a[0] * (1.f - t) + b[0] * t;
+	out[1] = a[1] * (1.f - t) + b[1] * t;
+}
+
 float hf_vec2f_square_magnitude(HF_Vec2f vec) {
 	return vec[0] * vec[0] + vec[1] * vec[1];
 }
@@ -101,6 +106,12 @@ void hf_vec3f_divide(HF_Vec3f vec, float scalar, HF_Vec3f out) {
 	out[0] = vec[0] / scalar;
 	out[1] = vec[1] / scalar;
 	out[2] = vec[2] / scalar;
+}
+
+void hf_vec3f_lerp(HF_Vec3f a, HF_Vec3f b, float t, HF_Vec3f out) {
+	out[0] = a[0] * (1.f - t) + b[0] * t;
+	out[1] = a[1] * (1.f - t) + b[1] * t;
+	out[2] = a[2] * (1.f - t) + b[2] * t;
 }
 
 float hf_vec3f_square_magnitude(HF_Vec3f vec) {
