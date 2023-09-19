@@ -37,7 +37,7 @@ void hf_mat1x2f_multiply_mat2f(HF_Mat1x2f a, HF_Mat2f b, HF_Mat1x2f out) {
 	for(int i = 0; i < 1; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 1; k++) {
+			for(int k = 0; k < 2; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -51,7 +51,7 @@ void hf_mat1x2f_multiply_mat2x3f(HF_Mat1x2f a, HF_Mat2x3f b, HF_Mat1x3f out) {
 	for(int i = 0; i < 1; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 1; k++) {
+			for(int k = 0; k < 2; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -65,7 +65,7 @@ void hf_mat1x2f_multiply_mat2x4f(HF_Mat1x2f a, HF_Mat2x4f b, HF_Mat1x4f out) {
 	for(int i = 0; i < 1; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 1; k++) {
+			for(int k = 0; k < 2; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -109,7 +109,7 @@ void hf_mat1x3f_multiply_mat3x2f(HF_Mat1x3f a, HF_Mat3x2f b, HF_Mat1x2f out) {
 	for(int i = 0; i < 1; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 1; k++) {
+			for(int k = 0; k < 3; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -123,7 +123,7 @@ void hf_mat1x3f_multiply_mat3f(HF_Mat1x3f a, HF_Mat3f b, HF_Mat1x3f out) {
 	for(int i = 0; i < 1; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 1; k++) {
+			for(int k = 0; k < 3; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -137,7 +137,7 @@ void hf_mat1x3f_multiply_mat3x4f(HF_Mat1x3f a, HF_Mat3x4f b, HF_Mat1x4f out) {
 	for(int i = 0; i < 1; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 1; k++) {
+			for(int k = 0; k < 3; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -181,7 +181,7 @@ void hf_mat1x4f_multiply_mat4x2f(HF_Mat1x4f a, HF_Mat4x2f b, HF_Mat1x2f out) {
 	for(int i = 0; i < 1; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 1; k++) {
+			for(int k = 0; k < 4; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -195,7 +195,7 @@ void hf_mat1x4f_multiply_mat4x3f(HF_Mat1x4f a, HF_Mat4x3f b, HF_Mat1x3f out) {
 	for(int i = 0; i < 1; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 1; k++) {
+			for(int k = 0; k < 4; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -209,7 +209,7 @@ void hf_mat1x4f_multiply_mat4f(HF_Mat1x4f a, HF_Mat4f b, HF_Mat1x4f out) {
 	for(int i = 0; i < 1; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 1; k++) {
+			for(int k = 0; k < 4; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -253,7 +253,7 @@ void hf_mat2x1f_multiply_mat1x2f(HF_Mat2x1f a, HF_Mat1x2f b, HF_Mat2f out) {
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 2; k++) {
+			for(int k = 0; k < 1; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -267,7 +267,7 @@ void hf_mat2x1f_multiply_mat1x3f(HF_Mat2x1f a, HF_Mat1x3f b, HF_Mat2x3f out) {
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 2; k++) {
+			for(int k = 0; k < 1; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -281,7 +281,7 @@ void hf_mat2x1f_multiply_mat1x4f(HF_Mat2x1f a, HF_Mat1x4f b, HF_Mat2x4f out) {
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 2; k++) {
+			for(int k = 0; k < 1; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -441,7 +441,7 @@ void hf_mat2x3f_multiply_mat3x1f(HF_Mat2x3f a, HF_Mat3x1f b, HF_Mat2x1f out) {
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 1; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 2; k++) {
+			for(int k = 0; k < 3; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -455,7 +455,7 @@ void hf_mat2x3f_multiply_mat3x2f(HF_Mat2x3f a, HF_Mat3x2f b, HF_Mat2f out) {
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 2; k++) {
+			for(int k = 0; k < 3; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -469,7 +469,7 @@ void hf_mat2x3f_multiply_mat3f(HF_Mat2x3f a, HF_Mat3f b, HF_Mat2x3f out) {
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 2; k++) {
+			for(int k = 0; k < 3; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -483,7 +483,7 @@ void hf_mat2x3f_multiply_mat3x4f(HF_Mat2x3f a, HF_Mat3x4f b, HF_Mat2x4f out) {
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 2; k++) {
+			for(int k = 0; k < 3; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -527,7 +527,7 @@ void hf_mat2x4f_multiply_mat4x1f(HF_Mat2x4f a, HF_Mat4x1f b, HF_Mat2x1f out) {
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 1; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 2; k++) {
+			for(int k = 0; k < 4; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -541,7 +541,7 @@ void hf_mat2x4f_multiply_mat4x2f(HF_Mat2x4f a, HF_Mat4x2f b, HF_Mat2f out) {
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 2; k++) {
+			for(int k = 0; k < 4; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -555,7 +555,7 @@ void hf_mat2x4f_multiply_mat4x3f(HF_Mat2x4f a, HF_Mat4x3f b, HF_Mat2x3f out) {
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 2; k++) {
+			for(int k = 0; k < 4; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -569,7 +569,7 @@ void hf_mat2x4f_multiply_mat4f(HF_Mat2x4f a, HF_Mat4f b, HF_Mat2x4f out) {
 	for(int i = 0; i < 2; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 2; k++) {
+			for(int k = 0; k < 4; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -613,7 +613,7 @@ void hf_mat3x1f_multiply_mat1x2f(HF_Mat3x1f a, HF_Mat1x2f b, HF_Mat3x2f out) {
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 3; k++) {
+			for(int k = 0; k < 1; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -627,7 +627,7 @@ void hf_mat3x1f_multiply_mat1x3f(HF_Mat3x1f a, HF_Mat1x3f b, HF_Mat3f out) {
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 3; k++) {
+			for(int k = 0; k < 1; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -641,7 +641,7 @@ void hf_mat3x1f_multiply_mat1x4f(HF_Mat3x1f a, HF_Mat1x4f b, HF_Mat3x4f out) {
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 3; k++) {
+			for(int k = 0; k < 1; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -685,7 +685,7 @@ void hf_mat3x2f_multiply_mat2x1f(HF_Mat3x2f a, HF_Mat2x1f b, HF_Mat3x1f out) {
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 1; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 3; k++) {
+			for(int k = 0; k < 2; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -699,7 +699,7 @@ void hf_mat3x2f_multiply_mat2f(HF_Mat3x2f a, HF_Mat2f b, HF_Mat3x2f out) {
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 3; k++) {
+			for(int k = 0; k < 2; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -713,7 +713,7 @@ void hf_mat3x2f_multiply_mat2x3f(HF_Mat3x2f a, HF_Mat2x3f b, HF_Mat3f out) {
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 3; k++) {
+			for(int k = 0; k < 2; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -727,7 +727,7 @@ void hf_mat3x2f_multiply_mat2x4f(HF_Mat3x2f a, HF_Mat2x4f b, HF_Mat3x4f out) {
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 3; k++) {
+			for(int k = 0; k < 2; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -914,7 +914,7 @@ void hf_mat3x4f_multiply_mat4x1f(HF_Mat3x4f a, HF_Mat4x1f b, HF_Mat3x1f out) {
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 1; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 3; k++) {
+			for(int k = 0; k < 4; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -928,7 +928,7 @@ void hf_mat3x4f_multiply_mat4x2f(HF_Mat3x4f a, HF_Mat4x2f b, HF_Mat3x2f out) {
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 3; k++) {
+			for(int k = 0; k < 4; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -942,7 +942,7 @@ void hf_mat3x4f_multiply_mat4x3f(HF_Mat3x4f a, HF_Mat4x3f b, HF_Mat3f out) {
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 3; k++) {
+			for(int k = 0; k < 4; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -956,7 +956,7 @@ void hf_mat3x4f_multiply_mat4f(HF_Mat3x4f a, HF_Mat4f b, HF_Mat3x4f out) {
 	for(int i = 0; i < 3; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 3; k++) {
+			for(int k = 0; k < 4; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -1000,7 +1000,7 @@ void hf_mat4x1f_multiply_mat1x2f(HF_Mat4x1f a, HF_Mat1x2f b, HF_Mat4x2f out) {
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 4; k++) {
+			for(int k = 0; k < 1; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -1014,7 +1014,7 @@ void hf_mat4x1f_multiply_mat1x3f(HF_Mat4x1f a, HF_Mat1x3f b, HF_Mat4x3f out) {
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 4; k++) {
+			for(int k = 0; k < 1; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -1028,7 +1028,7 @@ void hf_mat4x1f_multiply_mat1x4f(HF_Mat4x1f a, HF_Mat1x4f b, HF_Mat4f out) {
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 4; k++) {
+			for(int k = 0; k < 1; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -1072,7 +1072,7 @@ void hf_mat4x2f_multiply_mat2x1f(HF_Mat4x2f a, HF_Mat2x1f b, HF_Mat4x1f out) {
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 1; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 4; k++) {
+			for(int k = 0; k < 2; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -1086,7 +1086,7 @@ void hf_mat4x2f_multiply_mat2f(HF_Mat4x2f a, HF_Mat2f b, HF_Mat4x2f out) {
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 4; k++) {
+			for(int k = 0; k < 2; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -1100,7 +1100,7 @@ void hf_mat4x2f_multiply_mat2x3f(HF_Mat4x2f a, HF_Mat2x3f b, HF_Mat4x3f out) {
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 4; k++) {
+			for(int k = 0; k < 2; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -1114,7 +1114,7 @@ void hf_mat4x2f_multiply_mat2x4f(HF_Mat4x2f a, HF_Mat2x4f b, HF_Mat4f out) {
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 4; k++) {
+			for(int k = 0; k < 2; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -1158,7 +1158,7 @@ void hf_mat4x3f_multiply_mat3x1f(HF_Mat4x3f a, HF_Mat3x1f b, HF_Mat4x1f out) {
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 1; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 4; k++) {
+			for(int k = 0; k < 3; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -1172,7 +1172,7 @@ void hf_mat4x3f_multiply_mat3x2f(HF_Mat4x3f a, HF_Mat3x2f b, HF_Mat4x2f out) {
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 2; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 4; k++) {
+			for(int k = 0; k < 3; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -1186,7 +1186,7 @@ void hf_mat4x3f_multiply_mat3f(HF_Mat4x3f a, HF_Mat3f b, HF_Mat4x3f out) {
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 3; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 4; k++) {
+			for(int k = 0; k < 3; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
@@ -1200,7 +1200,7 @@ void hf_mat4x3f_multiply_mat3x4f(HF_Mat4x3f a, HF_Mat3x4f b, HF_Mat4f out) {
 	for(int i = 0; i < 4; i++) {
 		for(int j = 0; j < 4; j++) {
 			float val = 0.f;
-			for(int k = 0; k < 4; k++) {
+			for(int k = 0; k < 3; k++) {
 				val += a[i][k] * b[k][j];
 			}
 			tmp[i][j] = val;
