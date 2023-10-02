@@ -31,7 +31,7 @@ bool hf_line2f_intersection(HF_Line2f a, HF_Line2f b, HF_Vec2f out) {
         HF_Vec2f bs_as;
         hf_vec2f_subtract(b.start, a.start, bs_as);
         HF_Vec2f be_as;
-        hf_vec2f_subtract(b.end, a.start, bs_as);
+        hf_vec2f_subtract(b.end, a.start, be_as);
 
         bool dot1 = hf_vec2f_dot(a_vec90, bs_as) > 0.f;
         bool dot2 = hf_vec2f_dot(a_vec90, be_as) > 0.f;
