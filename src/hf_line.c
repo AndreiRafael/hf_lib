@@ -47,9 +47,9 @@ bool hf_line2f_intersection(HF_Line2f a, HF_Line2f b, HF_Vec2f out) {
         HF_Vec2f b_vec90 = { b_vec[1], -b_vec[0] };//b vector but rotated by 90 degrees
 
         HF_Vec2f as_bs;
-        hf_vec2f_subtract(b.start, a.start, as_bs);
+        hf_vec2f_subtract(a.start, b.start, as_bs);
         HF_Vec2f ae_bs;
-        hf_vec2f_subtract(b.end, a.start, ae_bs);
+        hf_vec2f_subtract(a.end, b.start, ae_bs);
 
         bool dot1 = hf_vec2f_dot(b_vec90, as_bs) > 0.f;
         bool dot2 = hf_vec2f_dot(b_vec90, ae_bs) > 0.f;
