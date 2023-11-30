@@ -1,9 +1,9 @@
 #include "../include/hf_line.h"
 #include <math.h>
 
-void hf_line2f_closest_point(HF_Vec2f start, HF_Vec2f end, HF_Vec2f point, HF_Vec2f out) {
-    HF_Vec2f line_vec;
-    HF_Vec2f point_vec;
+void hf_line2f_closest_point(hf_vec2f start, hf_vec2f end, hf_vec2f point, hf_vec2f out) {
+    hf_vec2f line_vec;
+    hf_vec2f point_vec;
     hf_vec2f_subtract(end, start, line_vec);
     hf_vec2f_subtract(point, start, point_vec);
 
@@ -22,15 +22,15 @@ void hf_line2f_closest_point(HF_Vec2f start, HF_Vec2f end, HF_Vec2f point, HF_Ve
     hf_vec2f_add(start, out, out);
 }
 
-bool hf_line2f_intersection(HF_Vec2f a_start, HF_Vec2f a_end, HF_Vec2f b_start, HF_Vec2f b_end, HF_Vec2f out) {
-    HF_Vec2f a_vec;
+bool hf_line2f_intersection(hf_vec2f a_start, hf_vec2f a_end, hf_vec2f b_start, hf_vec2f b_end, hf_vec2f out) {
+    hf_vec2f a_vec;
     hf_vec2f_subtract(a_end, a_start, a_vec);
     {//use dot to check if a is between the points of b
-        HF_Vec2f a_vec90 = { a_vec[1], -a_vec[0] };//a vector but rotated by 90 degrees
+        hf_vec2f a_vec90 = { a_vec[1], -a_vec[0] };//a vector but rotated by 90 degrees
 
-        HF_Vec2f bs_as;
+        hf_vec2f bs_as;
         hf_vec2f_subtract(b_start, a_start, bs_as);
-        HF_Vec2f be_as;
+        hf_vec2f be_as;
         hf_vec2f_subtract(b_end, a_start, be_as);
 
         bool dot1 = hf_vec2f_dot(a_vec90, bs_as) > 0.f;
@@ -41,14 +41,14 @@ bool hf_line2f_intersection(HF_Vec2f a_start, HF_Vec2f a_end, HF_Vec2f b_start, 
         }
     }
 
-    HF_Vec2f b_vec;
+    hf_vec2f b_vec;
     hf_vec2f_subtract(b_end, b_start, b_vec);
     {//use dot to check if b is between the points of a
-        HF_Vec2f b_vec90 = { b_vec[1], -b_vec[0] };//b vector but rotated by 90 degrees
+        hf_vec2f b_vec90 = { b_vec[1], -b_vec[0] };//b vector but rotated by 90 degrees
 
-        HF_Vec2f as_bs;
+        hf_vec2f as_bs;
         hf_vec2f_subtract(a_start, b_start, as_bs);
-        HF_Vec2f ae_bs;
+        hf_vec2f ae_bs;
         hf_vec2f_subtract(a_end, b_start, ae_bs);
 
         bool dot1 = hf_vec2f_dot(b_vec90, as_bs) > 0.f;

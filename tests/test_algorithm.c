@@ -44,12 +44,26 @@ int compare(const void* a, const void* b) {
     return *(int*)a - *(int*)b;
 }
 
+static void reset_array(int* arr) {
+    arr[0] = 5;
+    arr[1] = 3;
+    arr[2] = 4;
+    arr[3] = 1;
+    arr[4] = 2;
+}
+
 int main(int argc, char** argv) {
-    int arr[5] = { 5, 3, 4, 1, 2 };
+    int arr[5];
+    reset_array(arr);
     print_arr_int("original array", arr, sizeof(arr) / sizeof(arr[0]));
 
     hf_sort_bubble(arr, 5, sizeof(int), compare);
-    print_arr_int("sorted array", arr, 5);
+    print_arr_int("bubble sorted array", arr, 5);
+    assert_array(arr, 5, 1, 2, 3, 4, 5);
+
+    reset_array(arr);
+    hf_sort_selection(arr, 5, sizeof(int), compare);
+    print_arr_int("selection sorted array", arr, 5);
     assert_array(arr, 5, 1, 2, 3, 4, 5);
 
     char select_char[5];

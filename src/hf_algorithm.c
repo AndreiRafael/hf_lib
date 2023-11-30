@@ -19,29 +19,49 @@ do {\
         HF_UNIQUENAME(cb)++;\
         HF_UNIQUENAME(i)++;\
     }\
-} while(0)\
+} while(0)
 
-void hf_sort_bubble(void* items, size_t item_count, size_t item_size, int(*compare)(const void*, const void*)) {
+static int compare_with_context(void* a, void* b, void* context) {
+    int(*compare)(void* a, void* b) = (int(*)(void*, void*))context;
+    return compare(a, b);
+}
+
+void hf_sort_bubble(void* items, size_t item_count, size_t item_size, int(*compare)(void*, void*)) {
+    hf_sort_with_context_bubble(items, item_count, item_size, compare_with_context, (void*)compare);
+}
+
+void hf_sort_selection(void* items, size_t item_count, size_t item_size, int(*compare)(void* a, void* b)) {
+    hf_sort_with_context_selection(items, item_count, item_size, compare_with_context, (void*)compare);
+}
+
+void hf_sort_with_context_bubble(void* items, size_t item_count, size_t item_size, int(*compare)(void* a, void* b, void* context), void* context) {
+    char* c_items = (char*)items;
+
     for(size_t i = 0; i < item_count - 1; i++) {
         for(size_t j = 0; j < item_count - i - 1; j++) {
-            void* a = (((char*)items) + item_size * j);
-            void* b = (((char*)items) + item_size * (j + 1));
-            if(compare(a, b) > 0) {
+            void* a = &c_items[item_size * j];
+            void* b = &c_items[item_size * (j + 1)];
+            if(compare(a, b, context) > 0) {
                 HF_BITSWAP(a, b, item_size);
             }
         }
     }
 }
 
-void hf_sort_with_context_bubble(void* items, size_t item_count, size_t item_size, int(*compare)(const void* a, const void* b, const void* context), void* context) {
-    for(size_t i = 0; i < item_count - 1; i++) {
-        for(size_t j = 0; j < item_count - i - 1; j++) {
-            void* a = (((char*)items) + item_size * j);
-            void* b = (((char*)items) + item_size * (j + 1));
-            if(compare(a, b, context) > 0) {
-                HF_BITSWAP(a, b, item_size);
+void hf_sort_with_context_selection(void* items, size_t item_count, size_t item_size, int(*compare)(void* a, void* b, void* context), void* context) {
+    char* c_items = (char*)items;
+
+    for(size_t i = 0; i < item_count; i++) {
+        void* min = &(((char*)items)[item_size * i]);
+        for(size_t j = i + 1; j < item_count; j++) {
+            void* other = &c_items[item_size * j];
+            if(compare(other, min, context) < 0) {
+                min = other;
             }
         }
+        //swap min with current index
+        void* curr = &c_items[item_size * i];
+        HF_BITSWAP(curr, min, item_size);
     }
 }
 
