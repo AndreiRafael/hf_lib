@@ -7,6 +7,7 @@ set(hf_lib_sources
     hf_mat.c
     hf_memory.c
     hf_path.c
+    hf_shape.c
     hf_string.c
     hf_transform.c
     hf_vec.c
