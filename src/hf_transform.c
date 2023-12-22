@@ -145,3 +145,25 @@ void hf_transform3f_projection_perspective_size(float w, float h, float near, fl
     out[3][2] = -1.f;
     out[3][3] = 0.f;
 }
+
+void hf_transform3f_view(hf_vec3f position, hf_vec3f forward, hf_vec3f up, hf_mat4f out) {
+    hf_vec3f right;
+    hf_vec3f_cross(forward, up, right);
+
+    hf_mat4f_identity(out);
+    out[0][0] = right[0];
+    out[1][0] = right[1];
+    out[2][0] = right[2];
+
+    out[0][1] = up[0];
+    out[1][1] = up[1];
+    out[2][1] = up[2];
+
+    out[0][2] = -forward[0];
+    out[1][2] = -forward[1];
+    out[2][2] = -forward[2];
+
+    out[0][3] = -position[0];
+    out[1][3] = -position[1];
+    out[2][3] = -position[2];
+}
