@@ -5,8 +5,8 @@
 
 void hf_transform2f_translation(hf_vec2f vec, hf_mat3f out) {
     hf_mat3f_identity(out);
-    out[0][2] = vec[0];
-    out[1][2] = vec[1];
+    out[2][0] = vec[0];
+    out[2][1] = vec[1];
 }
 
 void hf_transform2f_rotation(float rad, hf_mat3f out) {
@@ -29,21 +29,21 @@ void hf_transform2f_scale(hf_vec2f vec, hf_mat3f out) {
 }
 
 void hf_transform2f_apply(hf_vec2f vec, hf_mat3f mat, hf_vec2f out) {
-    hf_mat3x1f tmp;
+    hf_mat1x3f tmp;
     tmp[0][0] = vec[0];
-    tmp[1][0] = vec[1];
-    tmp[2][0] = 1.f;
-    hf_mat3f_multiply_mat3x1f(mat, tmp, tmp);
+    tmp[0][1] = vec[1];
+    tmp[0][2] = 1.f;
+    hf_mat1x3f_multiply_mat3f(tmp, mat, tmp);
     out[0] = tmp[0][0];
-    out[1] = tmp[1][0];
+    out[1] = tmp[0][1];
 }
 
 
 void hf_transform3f_translation(hf_vec3f vec, hf_mat4f out) {
     hf_mat4f_identity(out);
-    out[0][3] = vec[0];
-    out[1][3] = vec[1];
-    out[2][3] = vec[2];
+    out[3][0] = vec[0];
+    out[3][1] = vec[1];
+    out[3][2] = vec[2];
 }
 
 void hf_transform3f_rotation(hf_vec3f vec, float rad, hf_mat4f out) {
@@ -117,15 +117,15 @@ void hf_transform3f_scale(hf_vec3f vec, hf_mat4f out) {
 }
 
 void hf_transform3f_apply(hf_vec3f vec, hf_mat4f mat, hf_vec3f out) {
-    hf_mat4x1f tmp;
+    hf_mat1x4f tmp;
     tmp[0][0] = vec[0];
-    tmp[1][0] = vec[1];
-    tmp[2][0] = vec[2];
-    tmp[3][0] = 1.f;
-    hf_mat4f_multiply_mat4x1f(mat, tmp, tmp);
+    tmp[0][1] = vec[1];
+    tmp[0][2] = vec[2];
+    tmp[0][3] = 1.f;
+    hf_mat1x4f_multiply_mat4f(tmp, mat, tmp);
     out[0] = tmp[0][0];
-    out[1] = tmp[1][0];
-    out[2] = tmp[2][0];
+    out[1] = tmp[0][1];
+    out[2] = tmp[0][2];
 }
 
 void hf_transform3f_projection_orthographic_size(float w, float h, float near, float far, hf_mat4f out) {
@@ -141,29 +141,42 @@ void hf_transform3f_projection_perspective_size(float w, float h, float near, fl
     out[0][0] = (2.f * near) / w;
     out[1][1] = (2.f * near) / h;
     out[2][2] = -((far + near) / (far - near));
-    out[2][3] = (-2.f * far * near) / (far - near);
-    out[3][2] = -1.f;
+    out[2][3] = -1.f;
+    out[3][2] = (-2.f * far * near) / (far - near);
     out[3][3] = 0.f;
 }
 
 void hf_transform3f_view(hf_vec3f position, hf_vec3f forward, hf_vec3f up, hf_mat4f out) {
-    hf_vec3f right;
-    hf_vec3f_cross(forward, up, right);
+    hf_vec3f pos = { position[0], position[1], position[2] };
 
-    hf_mat4f_identity(out);
-    out[0][0] = right[0];
-    out[1][0] = right[1];
-    out[2][0] = right[2];
+    hf_vec3f f;
+    hf_vec3f_normalize(forward, f);
 
-    out[0][1] = up[0];
-    out[1][1] = up[1];
-    out[2][1] = up[2];
+    hf_vec3f r;
+    hf_vec3f_cross(f, up, r);
+    hf_vec3f_normalize(r, r);
 
-    out[0][2] = -forward[0];
-    out[1][2] = -forward[1];
-    out[2][2] = -forward[2];
+    hf_vec3f u;
+    hf_vec3f_cross(r, f, u);
 
-    out[0][3] = -position[0];
-    out[1][3] = -position[1];
-    out[2][3] = -position[2];
+    out[0][0] = r[0];
+    out[1][0] = r[1];
+    out[2][0] = r[2];
+
+    out[0][1] = u[0];
+    out[1][1] = u[1];
+    out[2][1] = u[2];
+
+    out[0][2] = -f[0];
+    out[1][2] = -f[1];
+    out[2][2] = -f[2];
+
+    out[3][0] =  -hf_vec3f_dot(r, pos);
+    out[3][1] =  -hf_vec3f_dot(u, pos);
+    out[3][2] =   hf_vec3f_dot(f, pos);
+
+    out[0][3] = 0.f;
+    out[1][3] = 0.f;
+    out[2][3] = 0.f;
+    out[3][3] = 1.f;
 }
