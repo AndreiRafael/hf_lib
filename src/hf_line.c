@@ -1,14 +1,18 @@
 #include "../include/hf_line.h"
 #include <math.h>
 
-void hf_line2f_closest_point(hf_vec2f start, hf_vec2f end, hf_vec2f point, hf_vec2f out) {
+float hf_line2f_projection(hf_vec2f start, hf_vec2f end, hf_vec2f point) {
     hf_vec2f line_vec;
     hf_vec2f point_vec;
     hf_vec2f_subtract(end, start, line_vec);
     hf_vec2f_subtract(point, start, point_vec);
 
     float dot = hf_vec2f_dot(line_vec, point_vec);
-    float lerp = dot / hf_vec2f_square_magnitude(line_vec);
+    return dot / hf_vec2f_square_magnitude(line_vec);
+}
+
+void hf_line2f_closest_point(hf_vec2f start, hf_vec2f end, hf_vec2f point, hf_vec2f out) {
+    float lerp = hf_line2f_projection(start, end, point);
 
     if(lerp < 0.f) {
         hf_vec2f_copy(start, out);
@@ -18,6 +22,9 @@ void hf_line2f_closest_point(hf_vec2f start, hf_vec2f end, hf_vec2f point, hf_ve
         hf_vec2f_copy(end, out);
         return;
     }
+
+    hf_vec2f line_vec;
+    hf_vec2f_subtract(end, start, line_vec);
     hf_vec2f_multiply(line_vec, lerp, out);
     hf_vec2f_add(start, out, out);
 }
