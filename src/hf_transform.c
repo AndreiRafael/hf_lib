@@ -171,9 +171,9 @@ void hf_transform3f_view(hf_vec3f position, hf_vec3f forward, hf_vec3f up, hf_ma
     out[2][1] = -f[1];
     out[2][2] = -f[2];
 
-    out[0][3] =  -hf_vec3f_dot(r, pos);
-    out[1][3] =  -hf_vec3f_dot(u, pos);
-    out[2][3] =   hf_vec3f_dot(f, pos);
+    out[0][3] = -hf_vec3f_dot(r, pos);
+    out[1][3] = -hf_vec3f_dot(u, pos);
+    out[2][3] =  hf_vec3f_dot(f, pos);
 
     out[3][0] = 0.f;
     out[3][1] = 0.f;
