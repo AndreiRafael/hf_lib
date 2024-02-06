@@ -219,7 +219,7 @@ static long internal_hf_string_unicode_to_lower(
     return unicode_value;
 }
 
-static bool internal_hf_string_to_case(const char* string, char* buffer, size_t buffer_size, bool to_upper) {
+static bool internal_hf_string_to_case(const char* restrict string, char* restrict buffer, size_t buffer_size, bool to_upper) {
     if(buffer_size == 0) {
         return false;
     }
@@ -468,10 +468,210 @@ static bool internal_hf_string_to_case(const char* string, char* buffer, size_t 
     return retval;
 }
 
-bool hf_string_to_lower(const char* string, char* buffer, size_t buffer_size) {
+bool hf_string_to_lower(const char* restrict string, char* restrict buffer, size_t buffer_size) {
     return internal_hf_string_to_case(string, buffer, buffer_size, false);
 }
 
-bool hf_string_to_upper(const char* string, char* buffer, size_t buffer_size) {
+bool hf_string_to_upper(const char* restrict string, char* restrict buffer, size_t buffer_size) {
     return internal_hf_string_to_case(string, buffer, buffer_size, true);
+}
+
+
+const char* hf_string_parse_ull(const char* string, unsigned long long* value) {
+    if(!string || string[0] < '0' || string[0] > '9') {
+        return NULL;
+    }
+
+    const char* ptr = string;
+    const char* start = ptr;//due to previous checks, start is guaranteed to be a number here
+    do {
+        ptr++;
+    } while(ptr[0] >= '0' && ptr[0] <= '9');
+    const char* end = ptr;
+
+    if(value) {
+        unsigned long long mul = 1;
+        *value = 0;
+        while(ptr != start) {
+            ptr--;
+            *value += mul * (unsigned long long)(*ptr - '0');
+            mul *= 10;
+        }
+    }
+
+    return end;
+}
+
+const char* hf_string_parse_ll(const char* string, long long* value) {
+    if(!string) {
+        return NULL;
+    }
+
+    bool neg = string[0] == '-';
+    unsigned long long ull;
+
+    const char* ptr = hf_string_parse_ull(neg ? &string[1] : string, &ull);
+    if(value && ptr) {
+        *value = (long long)ull;
+        if(neg) {
+            *value = -*value;
+        }
+    }
+    return ptr;
+}
+
+const char* hf_string_parse_uint(const char* string, unsigned int* value) {
+    unsigned long long ull;
+    const char* ptr = hf_string_parse_ull(string, &ull);
+    if(ptr && value) {
+        *value = (unsigned int)ull;
+    }
+    return ptr;
+}
+
+const char* hf_string_parse_int(const char* string, int* value) {
+    long long ll;
+    const char* ptr = hf_string_parse_ll(string, &ll);
+    if(ptr && value) {
+        *value = (int)ll;
+    }
+    return ptr;
+}
+
+const char* hf_string_parse_double(const char* string, double* value) {
+    if(!string) {
+        return NULL;
+    }
+
+    bool neg = string[0] == '-';
+
+    long long integer = 0;
+    unsigned long long fraction = 0;
+    unsigned long long fraction_digits = 0;
+    long long exponent = 0;
+
+    const char* ptr = hf_string_parse_ll(string, &integer);
+    if(!ptr) {
+        return NULL;
+    }
+
+    if(ptr[0] == '.') {
+        const char* tmp = hf_string_parse_ull(&ptr[1], &fraction);
+        if(tmp) {
+            ptr++;
+            while(ptr != tmp) {
+                ptr++;
+                fraction_digits++;
+            }
+        }
+    }
+    if(ptr[0] == 'e') {
+        const char* tmp = hf_string_parse_ll(&ptr[1], &exponent);
+        if(tmp) {
+            ptr = tmp;
+        }
+    }
+
+    if(value) {
+        double dinteger = (double)integer;
+
+        double dfraction = neg ? -(double)fraction : (double)fraction;
+        while(fraction_digits) {
+            fraction_digits--;
+            dfraction /= 10.0;
+        }
+        *value = dinteger + dfraction;
+
+        while(exponent > 0) {
+            *value *= 10.0;
+            exponent--;
+        }
+        while(exponent < 0) {
+            *value /= 10.0;
+            exponent++;
+        }
+    }
+
+    return ptr;
+}
+
+const char* hf_string_parse_float(const char* string, float* value) {
+    double d;
+    const char* ptr = hf_string_parse_double(string, &d);
+    if(ptr && value) {
+        *value = (float)d;
+    }
+    return ptr;
+}
+
+const char* hf_string_find_ull(const char* string, unsigned long long* value) {
+    const char* ptr = string;
+    while(*ptr != '\0') {
+        const char* ret = hf_string_parse_ull(ptr, value);
+        if(ret) {
+            return ret;
+        }
+        ptr++;
+    }
+    return NULL;
+}
+
+const char* hf_string_find_ll(const char* string, long long* value) {
+    const char* ptr = string;
+    while(*ptr != '\0') {
+        const char* ret = hf_string_parse_ll(ptr, value);
+        if(ret) {
+            return ret;
+        }
+        ptr++;
+    }
+    return NULL;
+}
+
+const char* hf_string_find_uint(const char* string, unsigned int* value) {
+    const char* ptr = string;
+    while(*ptr != '\0') {
+        const char* ret = hf_string_parse_uint(ptr, value);
+        if(ret) {
+            return ret;
+        }
+        ptr++;
+    }
+    return NULL;
+}
+
+const char* hf_string_find_int(const char* string, int* value) {
+    const char* ptr = string;
+    while(*ptr != '\0') {
+        const char* ret = hf_string_parse_int(ptr, value);
+        if(ret) {
+            return ret;
+        }
+        ptr++;
+    }
+    return NULL;
+}
+
+const char* hf_string_find_double(const char* string, double* value) {
+    const char* ptr = string;
+    while(*ptr != '\0') {
+        const char* ret = hf_string_parse_double(ptr, value);
+        if(ret) {
+            return ret;
+        }
+        ptr++;
+    }
+    return NULL;
+}
+
+const char* hf_string_find_float(const char* string, float* value) {
+    const char* ptr = string;
+    while(*ptr != '\0') {
+        const char* ret = hf_string_parse_float(ptr, value);
+        if(ret) {
+            return ret;
+        }
+        ptr++;
+    }
+    return NULL;
 }

@@ -7,14 +7,14 @@ set(hf_lib_sources
     hf_mat.c
     hf_memory.c
     hf_path.c
+    hf_shape.c
     hf_string.c
     hf_transform.c
+    hf_ui.c
     hf_vec.c
 )
 list(TRANSFORM hf_lib_sources PREPEND ${CMAKE_CURRENT_SOURCE_DIR}/src/)
 add_library(hf_lib ${hf_lib_sources})
-
-option(hf_lib_test "If true, will build the test programs of hf_lib" false)
 
 if(${CMAKE_C_COMPILER_ID} EQUAL MSVC)
     target_compile_options(hf_lib PRIVATE /D_CRT_SECURE_NO_WARNINGS)
