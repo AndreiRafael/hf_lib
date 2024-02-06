@@ -35,6 +35,16 @@ float hf_vec2i_magnitude(hf_vec2i vec) {
 	return sqrtf((float)hf_vec2i_square_magnitude(vec));
 }
 
+int hf_vec2i_square_distance(hf_vec2i a, hf_vec2i b) {
+	hf_vec2i aux;
+	hf_vec2i_subtract(a, b, aux);
+	return hf_vec2i_square_magnitude(aux);
+}
+
+float hf_vec2i_distance(hf_vec2i a, hf_vec2i b) {
+	return sqrtf((float)hf_vec2i_square_distance(a, b));
+}
+
 int hf_vec2i_dot(hf_vec2i a, hf_vec2i b) {
 	return a[0] * b[0] + a[1] * b[1];
 }
@@ -80,6 +90,16 @@ float hf_vec2f_magnitude(hf_vec2f vec) {
 	return sqrtf(hf_vec2f_square_magnitude(vec));
 }
 
+float hf_vec2f_square_distance(hf_vec2f a, hf_vec2f b) {
+	hf_vec2f aux;
+	hf_vec2f_subtract(a, b, aux);
+	return hf_vec2f_square_magnitude(aux);
+}
+
+float hf_vec2f_distance(hf_vec2f a, hf_vec2f b) {
+	return sqrtf(hf_vec2f_square_distance(a, b));
+}
+
 float hf_vec2f_dot(hf_vec2f a, hf_vec2f b) {
 	return a[0] * b[0] + a[1] * b[1];
 }
@@ -120,6 +140,16 @@ double hf_vec2d_magnitude(hf_vec2d vec) {
 	return sqrt(hf_vec2d_square_magnitude(vec));
 }
 
+double hf_vec2d_square_distance(hf_vec2d a, hf_vec2d b) {
+	hf_vec2d aux;
+	hf_vec2d_subtract(a, b, aux);
+	return hf_vec2d_square_magnitude(aux);
+}
+
+double hf_vec2d_distance(hf_vec2d a, hf_vec2d b) {
+	return sqrt(hf_vec2d_square_distance(a, b));
+}
+
 double hf_vec2d_dot(hf_vec2d a, hf_vec2d b) {
 	return a[0] * b[0] + a[1] * b[1];
 }
@@ -158,6 +188,16 @@ int hf_vec3i_square_magnitude(hf_vec3i vec) {
 
 float hf_vec3i_magnitude(hf_vec3i vec) {
 	return sqrtf((float)hf_vec3i_square_magnitude(vec));
+}
+
+int hf_vec3i_square_distance(hf_vec3i a, hf_vec3i b) {
+	hf_vec3i aux;
+	hf_vec3i_subtract(a, b, aux);
+	return hf_vec3i_square_magnitude(aux);
+}
+
+float hf_vec3i_distance(hf_vec3i a, hf_vec3i b) {
+	return sqrtf((float)hf_vec3i_square_distance(a, b));
 }
 
 int hf_vec3i_dot(hf_vec3i a, hf_vec3i b) {
@@ -218,6 +258,16 @@ float hf_vec3f_magnitude(hf_vec3f vec) {
 	return sqrtf(hf_vec3f_square_magnitude(vec));
 }
 
+float hf_vec3f_square_distance(hf_vec3f a, hf_vec3f b) {
+	hf_vec3f aux;
+	hf_vec3f_subtract(a, b, aux);
+	return hf_vec3f_square_magnitude(aux);
+}
+
+float hf_vec3f_distance(hf_vec3f a, hf_vec3f b) {
+	return sqrtf(hf_vec3f_square_distance(a, b));
+}
+
 float hf_vec3f_dot(hf_vec3f a, hf_vec3f b) {
 	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
@@ -270,6 +320,16 @@ double hf_vec3d_magnitude(hf_vec3d vec) {
 	return sqrt(hf_vec3d_square_magnitude(vec));
 }
 
+double hf_vec3d_square_distance(hf_vec3d a, hf_vec3d b) {
+	hf_vec3d aux;
+	hf_vec3d_subtract(a, b, aux);
+	return hf_vec3d_square_magnitude(aux);
+}
+
+double hf_vec3d_distance(hf_vec3d a, hf_vec3d b) {
+	return sqrt(hf_vec3d_square_distance(a, b));
+}
+
 double hf_vec3d_dot(hf_vec3d a, hf_vec3d b) {
 	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
 }
@@ -320,6 +380,16 @@ int hf_vec4i_square_magnitude(hf_vec4i vec) {
 
 float hf_vec4i_magnitude(hf_vec4i vec) {
 	return sqrtf((float)hf_vec4i_square_magnitude(vec));
+}
+
+int hf_vec4i_square_distance(hf_vec4i a, hf_vec4i b) {
+	hf_vec4i aux;
+	hf_vec4i_subtract(a, b, aux);
+	return hf_vec4i_square_magnitude(aux);
+}
+
+float hf_vec4i_distance(hf_vec4i a, hf_vec4i b) {
+	return sqrtf((float)hf_vec4i_square_distance(a, b));
 }
 
 int hf_vec4i_dot(hf_vec4i a, hf_vec4i b) {
@@ -377,6 +447,16 @@ float hf_vec4f_magnitude(hf_vec4f vec) {
 	return sqrtf(hf_vec4f_square_magnitude(vec));
 }
 
+float hf_vec4f_square_distance(hf_vec4f a, hf_vec4f b) {
+	hf_vec4f aux;
+	hf_vec4f_subtract(a, b, aux);
+	return hf_vec4f_square_magnitude(aux);
+}
+
+float hf_vec4f_distance(hf_vec4f a, hf_vec4f b) {
+	return sqrtf(hf_vec4f_square_distance(a, b));
+}
+
 float hf_vec4f_dot(hf_vec4f a, hf_vec4f b) {
 	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
 }
@@ -423,6 +503,16 @@ double hf_vec4d_square_magnitude(hf_vec4d vec) {
 
 double hf_vec4d_magnitude(hf_vec4d vec) {
 	return sqrt(hf_vec4d_square_magnitude(vec));
+}
+
+double hf_vec4d_square_distance(hf_vec4d a, hf_vec4d b) {
+	hf_vec4d aux;
+	hf_vec4d_subtract(a, b, aux);
+	return hf_vec4d_square_magnitude(aux);
+}
+
+double hf_vec4d_distance(hf_vec4d a, hf_vec4d b) {
+	return sqrt(hf_vec4d_square_distance(a, b));
 }
 
 double hf_vec4d_dot(hf_vec4d a, hf_vec4d b) {
