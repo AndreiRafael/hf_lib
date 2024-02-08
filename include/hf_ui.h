@@ -25,11 +25,12 @@ typedef struct hf_ui_canvas_s {
 
 //Reset element values to default ones
 void hf_ui_element_reset(hf_ui_element* element);
-
-//calculates the absolute transformation matrix for the element
+//calculates transformation matrix for the element
 void hf_ui_element_transform(hf_ui_element* element, hf_mat3f out_matrix);
+//calculates transformation matrix for the element, given a canvas transfomation matrix
+void hf_ui_element_transform_canvas(hf_ui_element* element, hf_mat3f canvas_transform, hf_mat3f out_matrix);
 
-//calculates the canvas transformation matrix for the element
+//calculates transformation matrix for the canvas
 void hf_ui_canvas_transform(hf_ui_canvas* canvas, hf_mat3f out_matrix);
 
 #endif//HF_UI_H

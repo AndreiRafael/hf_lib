@@ -40,6 +40,12 @@ void hf_ui_element_transform(hf_ui_element* element, hf_mat3f out_matrix) {
     hf_mat3f_multiply_mat3f(out_matrix, aux, out_matrix);
 }
 
+void hf_ui_element_transform_canvas(hf_ui_element* element, hf_mat3f canvas_transform, hf_mat3f out_matrix) {
+    hf_ui_element_transform(element, out_matrix);
+    hf_mat3f_multiply_mat3f(canvas_transform, out_matrix, out_matrix);
+}
+
+
 void hf_ui_canvas_transform(hf_ui_canvas* canvas, hf_mat3f out_matrix) {
     hf_mat3f_identity(out_matrix);
     out_matrix[0][0] = (canvas->right - canvas->left) / canvas->w;
