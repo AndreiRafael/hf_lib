@@ -45,6 +45,34 @@ void hf_ui_element_transform_canvas(hf_ui_element* element, hf_mat3f canvas_tran
     hf_mat3f_multiply_mat3f(canvas_transform, out_matrix, out_matrix);
 }
 
+bool hf_ui_element_is_point_inside(hf_ui_element* element, hf_vec2f point) {
+    hf_mat3f transform;
+    hf_ui_element_transform(element, transform);
+
+    hf_vec2f corners[4] = {
+        { 0.f, 0.f },
+        { 1.f, 0.f },
+        { 1.f, 1.f },
+        { 0.f, 1.f },
+    };
+    for(int i = 0; i < 4; i++) {
+        hf_transform2f_apply(corners[i], transform, corners[i]);
+    }
+
+    for(int i = 0; i < 4; i++) {
+        hf_vec2f edge;
+        hf_vec2f_subtract(corners[i], corners[(i + 1) % 4], edge);
+        hf_vec2f normal = { edge[1], -edge[0] };
+
+        hf_vec2f direction;
+        hf_vec2f_subtract(corners[i], point, direction);
+        if(hf_vec2f_dot(direction, normal) > 0.f) {
+            return false;
+        }
+    }
+    return true;
+}
+
 
 void hf_ui_canvas_transform(hf_ui_canvas* canvas, hf_mat3f out_matrix) {
     hf_mat3f_identity(out_matrix);
