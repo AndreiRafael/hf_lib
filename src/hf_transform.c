@@ -133,7 +133,7 @@ void hf_transform3f_projection_orthographic_size(float w, float h, float near, f
     out[0][0] = 2.f / w;
     out[1][1] = 2.f / h;
     out[2][2] = -2.f / (far - near);
-    out[3][2] = -((far + near) / (far - near));
+    out[2][3] = -((far + near) / (far - near));
 }
 
 void hf_transform3f_projection_perspective_size(float w, float h, float near, float far, hf_mat4f out) {
