@@ -142,7 +142,7 @@ void hf_transform3f_projection_perspective_size(float w, float h, float near, fl
     out[1][1] = (2.f * near) / h;
     out[2][2] = -((far + near) / (far - near));
     out[3][2] = -1.f;
-    out[2][3] = (-2.f * far * near) / (far - near);
+    out[2][3] = -((2.f * far * near) / (far - near));
     out[3][3] = 0.f;
 }
 
