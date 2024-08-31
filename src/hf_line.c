@@ -1,18 +1,28 @@
 #include "../include/hf_line.h"
-#include <math.h>
 
-float hf_line2f_projection(hf_vec2f start, hf_vec2f end, hf_vec2f point) {
-    hf_vec2f line_vec;
+float hf_line2f_projection(hf_vec2f line_point, hf_vec2f line_direction, hf_vec2f point) {
     hf_vec2f point_vec;
-    hf_vec2f_subtract(end, start, line_vec);
-    hf_vec2f_subtract(point, start, point_vec);
-
-    float dot = hf_vec2f_dot(line_vec, point_vec);
-    return dot / hf_vec2f_square_magnitude(line_vec);
+    hf_vec2f_subtract(point, line_point, point_vec);
+    return hf_vec2f_dot(line_direction, point_vec) / hf_vec2f_square_magnitude(line_direction);
 }
 
-void hf_line2f_closest_point(hf_vec2f start, hf_vec2f end, hf_vec2f point, hf_vec2f out) {
-    float lerp = hf_line2f_projection(start, end, point);
+void hf_line2f_closest_point(hf_vec2f line_point, hf_vec2f line_direction, hf_vec2f point, hf_vec2f out) {
+    float projection = hf_line2f_projection(line_point, line_direction, point);
+    hf_vec2f_multiply(line_direction, projection, out);
+    hf_vec2f_add(line_point, out, out);
+}
+
+// TODO: line intersection
+
+
+float hf_segment2f_projection(hf_vec2f start, hf_vec2f end, hf_vec2f point) {
+    hf_vec2f line_vec;
+    hf_vec2f_subtract(end, start, line_vec);
+    return hf_line2f_projection(start, line_vec, point);
+}
+
+void hf_segment2f_closest_point(hf_vec2f start, hf_vec2f end, hf_vec2f point, hf_vec2f out) {
+    float lerp = hf_segment2f_projection(start, end, point);
 
     if(lerp < 0.f) {
         hf_vec2f_copy(start, out);
@@ -29,7 +39,7 @@ void hf_line2f_closest_point(hf_vec2f start, hf_vec2f end, hf_vec2f point, hf_ve
     hf_vec2f_add(start, out, out);
 }
 
-bool hf_line2f_intersection(hf_vec2f a_start, hf_vec2f a_end, hf_vec2f b_start, hf_vec2f b_end, hf_vec2f out) {
+bool hf_segment2f_intersection(hf_vec2f a_start, hf_vec2f a_end, hf_vec2f b_start, hf_vec2f b_end, hf_vec2f out) {
     hf_vec2f a_vec;
     hf_vec2f_subtract(a_end, a_start, a_vec);
     {//use dot to check if a is between the points of b
