@@ -29,7 +29,7 @@ bool hf_shape_circle_intersects_polygon_convex(hf_vec2f* points, size_t points_c
     float radius_squared = radius * radius;
     for(size_t i = 0; i < points_count; i++) {
         hf_vec2f point;
-        hf_line2f_closest_point(points[i], points[(i + 1) % points_count], center, point);
+        hf_segment2f_closest_point(points[i], points[(i + 1) % points_count], center, point);
 
         hf_vec2f diff;
         hf_vec2f_subtract(center, point, diff);
