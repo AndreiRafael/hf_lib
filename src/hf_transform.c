@@ -109,6 +109,13 @@ void hf_transform3f_rotation_z_cached(float sin_rad, float cos_rad, hf_mat4f out
     out[1][1] = cos_rad;
 }
 
+void hf_transform3f_look_at_dir(hf_vec3f dir, hf_vec3f up, hf_mat4f out) {
+    (void)up;
+    float y = atan2f(-dir[2], dir[0]);
+
+    hf_transform3f_rotation_y(y, out);
+}
+
 void hf_transform3f_scale(hf_vec3f vec, hf_mat4f out) {
     hf_mat4f_identity(out);
     out[0][0] = vec[0];
