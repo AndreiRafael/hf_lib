@@ -109,11 +109,32 @@ void hf_transform3f_rotation_z_cached(float sin_rad, float cos_rad, hf_mat4f out
     out[1][1] = cos_rad;
 }
 
-void hf_transform3f_look_at_dir(hf_vec3f dir, hf_vec3f up, hf_mat4f out) {
-    (void)up;
+void hf_transform3f_rotation_from_direction(hf_vec3f dir, hf_vec3f up, hf_mat4f out) {
+    (void)up;// TODO:
+    float x = atan2f(dir[1], dir[0]);
     float y = atan2f(dir[2], dir[0]);
 
-    hf_transform3f_rotation_y(y, out);
+    hf_mat4f rot_x;
+    hf_transform3f_rotation_x(x, rot_x);
+    hf_mat4f rot_y;
+    hf_transform3f_rotation_y(y, rot_y);
+    hf_mat4f_multiply_mat4f(rot_x, rot_y, out);
+}
+
+void hf_transform3f_rotation_from_quat(hf_quatf quat, hf_mat4f out) {
+    hf_mat4f_identity(out);
+
+    out[0][0] = quat[0] * quat[0] - quat[1] * quat[1] - quat[2] * quat[2] + quat[3] * quat[3];
+    out[0][1] = 2.f * quat[0] * quat[1] + 2.f * quat[2] * quat[3];
+    out[0][2] = 2.f * quat[0] * quat[2] - 2.f * quat[1] * quat[3];
+
+    out[1][0] = 2.f * quat[0] * quat[1] - 2.f * quat[2] * quat[3];
+    out[1][1] = -quat[0] * quat[0] + quat[1] * quat[1] - quat[2] * quat[2] + quat[3] * quat[3];
+    out[1][2] = 2.f * quat[1] * quat[2] + 2.f * quat[0] * quat[3];
+
+    out[2][0] = 2.f * quat[0] * quat[2] + 2.f * quat[1] * quat[3];
+    out[2][1] = 2.f * quat[1] * quat[2] - 2.f * quat[0] * quat[3];
+    out[2][2] = -quat[0] * quat[0] - quat[1] * quat[1] + quat[2] * quat[2] + quat[3] * quat[3];
 }
 
 void hf_transform3f_scale(hf_vec3f vec, hf_mat4f out) {

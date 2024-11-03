@@ -1,8 +1,9 @@
 #ifndef HF_TRANSFORM_H
 #define HF_TRANSFORM_H
 
-#include "hf_vec.h"
 #include "hf_mat.h"
+#include "hf_quat.h"
+#include "hf_vec.h"
 
 void hf_transform2f_translation(hf_vec2f vec, hf_mat3f out);// create a translation matrix
 void hf_transform2f_rotation(float rad, hf_mat3f out);// create a rotation matrix
@@ -19,7 +20,8 @@ void hf_transform3f_rotation_y(float rad, hf_mat4f out);// create a rotation mat
 void hf_transform3f_rotation_y_cached(float sin_rad, float cos_rad, hf_mat4f out);// create a rotation matrix on the y axis using pre-calculated sine and cosine
 void hf_transform3f_rotation_z(float rad, hf_mat4f out);// create a rotation matrix on the z axis
 void hf_transform3f_rotation_z_cached(float sin_rad, float cos_rad, hf_mat4f out);// create a rotation matrix on the z axis using pre-calculated sine and cosine
-void hf_transform3f_look_at_dir(hf_vec3f dir, hf_vec3f up, hf_mat4f out);// create a rotation matrix that looks towards a direction
+void hf_transform3f_rotation_from_direction(hf_vec3f dir, hf_vec3f up, hf_mat4f out);// create a rotation matrix that looks towards a direction
+void hf_transform3f_rotation_from_quat(hf_quatf quat, hf_mat4f out);// create a rotation matrix from a quaternion
 void hf_transform3f_scale(hf_vec3f vec, hf_mat4f out);// create a scale matrix
 void hf_transform3f_apply(hf_vec3f vec, hf_mat4f mat, hf_vec3f out);// returns vec transformed by the matrix mat
 
