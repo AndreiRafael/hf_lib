@@ -12,10 +12,10 @@
 //Returns true if contents of left are exactly the same as the contents of right.
 bool hf_string_equal(const char* left, const char* right);
 
-//Returns the lenght in bytes of a utf-8 null terminated string.
+//Returns the length in bytes of a utf-8 null terminated string.
 size_t hf_string_length_bytes(const char* string);
 
-//Returns the lenght in unicode codepoints of a utf-8 null terminated string.
+//Returns the length in unicode codepoints of a utf-8 null terminated string.
 size_t hf_string_length_codepoints(const char* string);
 
 //Copies contents of null terminated string into buffer and null terminates the buffer.

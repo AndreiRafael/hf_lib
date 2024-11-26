@@ -74,3 +74,36 @@ void hf_quatf_multiply_quatf(hf_quatf a, hf_quatf b, hf_quatf out) {
     out[2] = tmp[2];
     out[3] = a[3] * b[3] - hf_vec3f_dot(av, bv);
 }
+
+void hf_quatf_lerp(hf_quatf a, hf_quatf b, float t, hf_quatf out) {
+    float t_inv = 1.f - t;
+    out[0] = t_inv * a[0] + t * b[0];
+    out[1] = t_inv * a[1] + t * b[1];
+    out[2] = t_inv * a[2] + t * b[2];
+    out[3] = t_inv * a[3] + t * b[3];
+}
+
+void hf_quatf_slerp(hf_quatf a, hf_quatf b, float t, hf_quatf out) {
+    // TODO:
+    (void)a;
+    (void)b;
+    (void)t;
+    (void)out;
+}
+
+void hf_quatf_from_axis_angle(hf_vec3f axis, float angle, hf_quatf out) {
+    float sin = sinf(angle / 2.f);
+    float cos = cosf(angle / 2.f);
+
+    out[0] = axis[0] * sin;
+    out[1] = axis[1] * sin;
+    out[2] = axis[2] * sin;
+    out[3] = cos;
+}
+
+void hf_quatf_from_direction(hf_vec3f dir, hf_vec3f up, hf_quatf out) {
+    // TODO:
+    (void)dir;
+    (void)up;
+    (void)out;
+}
