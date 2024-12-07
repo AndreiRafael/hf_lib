@@ -1,7 +1,7 @@
 #include "../include/hf_path.h"
 #include "../include/hf_string.h"
 
-#define HF_PATH_MAX_PATH_LENGHT_PLUS_ONE (HF_PATH_MAX_PATH_LENGTH + 1)
+#define HF_PATH_MAX_PATH_LENGTH_PLUS_ONE (HF_PATH_MAX_PATH_LENGTH + 1)
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) || defined(__WIN32__)
     #define HF_PATH_PREFERRED_SEPARATOR ('\\')
@@ -92,9 +92,9 @@ bool hf_path_valid(const char* path) {
         "lpt0", "lpt1", "lpt2", "lpt3", "lpt4", "lpt5", "lpt6", "lpt7", "lpt8", "lpt9",
     };
     (void)reserved_names;// TODO: check forbidden names
-    char token_buffer[HF_PATH_MAX_PATH_LENGHT_PLUS_ONE];
+    char token_buffer[HF_PATH_MAX_PATH_LENGTH_PLUS_ONE];
     const char* itr = path;
-    while(internal_hf_path_read_token(token_buffer, HF_PATH_MAX_PATH_LENGHT_PLUS_ONE, &itr)) {
+    while(internal_hf_path_read_token(token_buffer, HF_PATH_MAX_PATH_LENGTH_PLUS_ONE, &itr)) {
         for(size_t i = 0; i < sizeof(reserved_characters) / sizeof(char); i++) {
             const char char_to_check = reserved_characters[i];
 
@@ -116,12 +116,12 @@ bool hf_path_valid(const char* path) {
 }
 
 bool hf_path_equal(const char* left_path, const char* right_path) {
-    char buffer_left[HF_PATH_MAX_PATH_LENGHT_PLUS_ONE];
-    char buffer_right[HF_PATH_MAX_PATH_LENGHT_PLUS_ONE];
+    char buffer_left[HF_PATH_MAX_PATH_LENGTH_PLUS_ONE];
+    char buffer_right[HF_PATH_MAX_PATH_LENGTH_PLUS_ONE];
 
     return
-        hf_path_normalize(left_path, buffer_left, HF_PATH_MAX_PATH_LENGHT_PLUS_ONE) &&
-        hf_path_normalize(right_path, buffer_right, HF_PATH_MAX_PATH_LENGHT_PLUS_ONE) &&
+        hf_path_normalize(left_path, buffer_left, HF_PATH_MAX_PATH_LENGTH_PLUS_ONE) &&
+        hf_path_normalize(right_path, buffer_right, HF_PATH_MAX_PATH_LENGTH_PLUS_ONE) &&
         hf_string_equal(buffer_left, buffer_right);
     ;
 }
@@ -155,8 +155,8 @@ bool hf_path_normalize(const char* path, char* buffer, size_t buffer_size) {
 
     int depth = 0;
 
-    char token_buffer[HF_PATH_MAX_PATH_LENGHT_PLUS_ONE];
-    while(internal_hf_path_read_token(token_buffer, HF_PATH_MAX_PATH_LENGHT_PLUS_ONE, &path)) {
+    char token_buffer[HF_PATH_MAX_PATH_LENGTH_PLUS_ONE];
+    while(internal_hf_path_read_token(token_buffer, HF_PATH_MAX_PATH_LENGTH_PLUS_ONE, &path)) {
         ETokenType type = internal_hf_path_token_type(token_buffer);
 
         if(type == ETOKENTYPE_PARENT && depth > 0) {
@@ -190,8 +190,8 @@ bool hf_path_normalize(const char* path, char* buffer, size_t buffer_size) {
 }
 
 bool hf_path_parent(const char* path, char* buffer, size_t buffer_size) {
-    char normalized_buffer[HF_PATH_MAX_PATH_LENGHT_PLUS_ONE];
-    if(hf_path_normalize(path, normalized_buffer, HF_PATH_MAX_PATH_LENGHT_PLUS_ONE)) {
+    char normalized_buffer[HF_PATH_MAX_PATH_LENGTH_PLUS_ONE];
+    if(hf_path_normalize(path, normalized_buffer, HF_PATH_MAX_PATH_LENGTH_PLUS_ONE)) {
         const char* last_token = internal_hf_path_last_token(path);
         if(hf_string_equal(last_token, ".")) {
             return hf_string_copy("..", buffer, buffer_size);
