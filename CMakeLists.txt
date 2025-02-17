@@ -3,6 +3,7 @@ project(hf_lib C)
 
 set(hf_lib_sources
     hf_algorithm.c
+    hf_buffer.c
     hf_line.c
     hf_mat.c
     hf_memory.c

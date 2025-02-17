@@ -33,7 +33,7 @@ void hf_transform2f_apply(hf_vec2f vec, hf_mat3f mat, hf_vec2f out) {
     tmp[0][0] = vec[0];
     tmp[0][1] = vec[1];
     tmp[0][2] = 1.f;
-    hf_mat1x3f_multiply_mat3f(tmp, mat, tmp);
+    hf_mat1x3f_multiply_mat3f(mat, tmp, tmp);
     out[0] = tmp[0][0];
     out[1] = tmp[0][1];
 }
@@ -150,7 +150,7 @@ void hf_transform3f_apply(hf_vec3f vec, hf_mat4f mat, hf_vec3f out) {
     tmp[0][1] = vec[1];
     tmp[0][2] = vec[2];
     tmp[0][3] = 1.f;
-    hf_mat1x4f_multiply_mat4f(tmp, mat, tmp);
+    hf_mat1x4f_multiply_mat4f(mat, tmp, tmp);
     out[0] = tmp[0][0];
     out[1] = tmp[0][1];
     out[2] = tmp[0][2];

@@ -42,7 +42,7 @@ void hf_ui_element_transform(hf_ui_element* element, hf_mat3f out_matrix) {
 
 void hf_ui_element_transform_canvas(hf_ui_element* element, hf_mat3f canvas_transform, hf_mat3f out_matrix) {
     hf_ui_element_transform(element, out_matrix);
-    hf_mat3f_multiply_mat3f(canvas_transform, out_matrix, out_matrix);
+    hf_mat3f_multiply_mat3f(out_matrix, canvas_transform, out_matrix);
 }
 
 bool hf_ui_element_is_point_inside(hf_ui_element* element, hf_vec2f point) {

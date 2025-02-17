@@ -666,7 +666,7 @@ const char* hf_string_find_double(const char* string, double* value) {
 
 const char* hf_string_find_float(const char* string, float* value) {
     const char* ptr = string;
-    while(*ptr != '\0') {
+    while(ptr && *ptr != '\0') {
         const char* ret = hf_string_parse_float(ptr, value);
         if(ret) {
             return ret;
