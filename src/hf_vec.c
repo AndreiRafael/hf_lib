@@ -1,10 +1,10 @@
 #include "../include/hf_vec.h"
 
-#include <string.h>
 #include <math.h>
 
 void hf_vec2i_copy(hf_vec2i vec, hf_vec2i out) {
-	memcpy(out, vec, sizeof(out[0]) * 2);
+	out[0] = vec[0];
+	out[1] = vec[1];
 }
 
 void hf_vec2i_add(hf_vec2i a, hf_vec2i b, hf_vec2i out) {
@@ -50,7 +50,8 @@ int hf_vec2i_dot(hf_vec2i a, hf_vec2i b) {
 }
 
 void hf_vec2f_copy(hf_vec2f vec, hf_vec2f out) {
-	memcpy(out, vec, sizeof(out[0]) * 2);
+	out[0] = vec[0];
+	out[1] = vec[1];
 }
 
 void hf_vec2f_add(hf_vec2f a, hf_vec2f b, hf_vec2f out) {
@@ -105,7 +106,8 @@ float hf_vec2f_dot(hf_vec2f a, hf_vec2f b) {
 }
 
 void hf_vec2d_copy(hf_vec2d vec, hf_vec2d out) {
-	memcpy(out, vec, sizeof(out[0]) * 2);
+	out[0] = vec[0];
+	out[1] = vec[1];
 }
 
 void hf_vec2d_add(hf_vec2d a, hf_vec2d b, hf_vec2d out) {
@@ -155,7 +157,9 @@ double hf_vec2d_dot(hf_vec2d a, hf_vec2d b) {
 }
 
 void hf_vec3i_copy(hf_vec3i vec, hf_vec3i out) {
-	memcpy(out, vec, sizeof(out[0]) * 3);
+	out[0] = vec[0];
+	out[1] = vec[1];
+	out[2] = vec[2];
 }
 
 void hf_vec3i_add(hf_vec3i a, hf_vec3i b, hf_vec3i out) {
@@ -209,11 +213,13 @@ void hf_vec3i_cross(hf_vec3i a, hf_vec3i b, hf_vec3i out) {
 	tmp[0] = a[1] * b[2] - a[2] * b[1];
 	tmp[1] = a[2] * b[0] - a[0] * b[2];
 	tmp[2] = a[0] * b[1] - a[1] * b[0];
-	memcpy(out, tmp, sizeof(out[0]) * 3);
+	hf_vec3i_copy(tmp, out);
 }
 
 void hf_vec3f_copy(hf_vec3f vec, hf_vec3f out) {
-	memcpy(out, vec, sizeof(out[0]) * 3);
+	out[0] = vec[0];
+	out[1] = vec[1];
+	out[2] = vec[2];
 }
 
 void hf_vec3f_add(hf_vec3f a, hf_vec3f b, hf_vec3f out) {
@@ -277,11 +283,13 @@ void hf_vec3f_cross(hf_vec3f a, hf_vec3f b, hf_vec3f out) {
 	tmp[0] = a[1] * b[2] - a[2] * b[1];
 	tmp[1] = a[2] * b[0] - a[0] * b[2];
 	tmp[2] = a[0] * b[1] - a[1] * b[0];
-	memcpy(out, tmp, sizeof(out[0]) * 3);
+	hf_vec3f_copy(tmp, out);
 }
 
 void hf_vec3d_copy(hf_vec3d vec, hf_vec3d out) {
-	memcpy(out, vec, sizeof(out[0]) * 3);
+	out[0] = vec[0];
+	out[1] = vec[1];
+	out[2] = vec[2];
 }
 
 void hf_vec3d_add(hf_vec3d a, hf_vec3d b, hf_vec3d out) {
@@ -339,11 +347,14 @@ void hf_vec3d_cross(hf_vec3d a, hf_vec3d b, hf_vec3d out) {
 	tmp[0] = a[1] * b[2] - a[2] * b[1];
 	tmp[1] = a[2] * b[0] - a[0] * b[2];
 	tmp[2] = a[0] * b[1] - a[1] * b[0];
-	memcpy(out, tmp, sizeof(out[0]) * 3);
+	hf_vec3d_copy(tmp, out);
 }
 
 void hf_vec4i_copy(hf_vec4i vec, hf_vec4i out) {
-	memcpy(out, vec, sizeof(out[0]) * 4);
+	out[0] = vec[0];
+	out[1] = vec[1];
+	out[2] = vec[2];
+	out[3] = vec[3];
 }
 
 void hf_vec4i_add(hf_vec4i a, hf_vec4i b, hf_vec4i out) {
@@ -397,7 +408,10 @@ int hf_vec4i_dot(hf_vec4i a, hf_vec4i b) {
 }
 
 void hf_vec4f_copy(hf_vec4f vec, hf_vec4f out) {
-	memcpy(out, vec, sizeof(out[0]) * 4);
+	out[0] = vec[0];
+	out[1] = vec[1];
+	out[2] = vec[2];
+	out[3] = vec[3];
 }
 
 void hf_vec4f_add(hf_vec4f a, hf_vec4f b, hf_vec4f out) {
@@ -462,7 +476,10 @@ float hf_vec4f_dot(hf_vec4f a, hf_vec4f b) {
 }
 
 void hf_vec4d_copy(hf_vec4d vec, hf_vec4d out) {
-	memcpy(out, vec, sizeof(out[0]) * 4);
+	out[0] = vec[0];
+	out[1] = vec[1];
+	out[2] = vec[2];
+	out[3] = vec[3];
 }
 
 void hf_vec4d_add(hf_vec4d a, hf_vec4d b, hf_vec4d out) {
