@@ -2,7 +2,7 @@
 
 #include <math.h>
 
-void hf_vec2i_copy(hf_vec2i vec, hf_vec2i out) {
+void hf_vec2i_copy(int* restrict vec, hf_vec2i out) {
 	out[0] = vec[0];
 	out[1] = vec[1];
 }
@@ -49,7 +49,7 @@ int hf_vec2i_dot(hf_vec2i a, hf_vec2i b) {
 	return a[0] * b[0] + a[1] * b[1];
 }
 
-void hf_vec2f_copy(hf_vec2f vec, hf_vec2f out) {
+void hf_vec2f_copy(float* restrict vec, hf_vec2f out) {
 	out[0] = vec[0];
 	out[1] = vec[1];
 }
@@ -105,7 +105,7 @@ float hf_vec2f_dot(hf_vec2f a, hf_vec2f b) {
 	return a[0] * b[0] + a[1] * b[1];
 }
 
-void hf_vec2d_copy(hf_vec2d vec, hf_vec2d out) {
+void hf_vec2d_copy(double* restrict vec, hf_vec2d out) {
 	out[0] = vec[0];
 	out[1] = vec[1];
 }
@@ -156,7 +156,7 @@ double hf_vec2d_dot(hf_vec2d a, hf_vec2d b) {
 	return a[0] * b[0] + a[1] * b[1];
 }
 
-void hf_vec3i_copy(hf_vec3i vec, hf_vec3i out) {
+void hf_vec3i_copy(int* restrict vec, hf_vec3i out) {
 	out[0] = vec[0];
 	out[1] = vec[1];
 	out[2] = vec[2];
@@ -216,7 +216,7 @@ void hf_vec3i_cross(hf_vec3i a, hf_vec3i b, hf_vec3i out) {
 	hf_vec3i_copy(tmp, out);
 }
 
-void hf_vec3f_copy(hf_vec3f vec, hf_vec3f out) {
+void hf_vec3f_copy(float* restrict vec, hf_vec3f out) {
 	out[0] = vec[0];
 	out[1] = vec[1];
 	out[2] = vec[2];
@@ -286,7 +286,7 @@ void hf_vec3f_cross(hf_vec3f a, hf_vec3f b, hf_vec3f out) {
 	hf_vec3f_copy(tmp, out);
 }
 
-void hf_vec3d_copy(hf_vec3d vec, hf_vec3d out) {
+void hf_vec3d_copy(double* restrict vec, hf_vec3d out) {
 	out[0] = vec[0];
 	out[1] = vec[1];
 	out[2] = vec[2];
@@ -350,7 +350,7 @@ void hf_vec3d_cross(hf_vec3d a, hf_vec3d b, hf_vec3d out) {
 	hf_vec3d_copy(tmp, out);
 }
 
-void hf_vec4i_copy(hf_vec4i vec, hf_vec4i out) {
+void hf_vec4i_copy(int* restrict vec, hf_vec4i out) {
 	out[0] = vec[0];
 	out[1] = vec[1];
 	out[2] = vec[2];
@@ -407,7 +407,7 @@ int hf_vec4i_dot(hf_vec4i a, hf_vec4i b) {
 	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
 }
 
-void hf_vec4f_copy(hf_vec4f vec, hf_vec4f out) {
+void hf_vec4f_copy(float* restrict vec, hf_vec4f out) {
 	out[0] = vec[0];
 	out[1] = vec[1];
 	out[2] = vec[2];
@@ -475,7 +475,7 @@ float hf_vec4f_dot(hf_vec4f a, hf_vec4f b) {
 	return a[0] * b[0] + a[1] * b[1] + a[2] * b[2] + a[3] * b[3];
 }
 
-void hf_vec4d_copy(hf_vec4d vec, hf_vec4d out) {
+void hf_vec4d_copy(double* restrict vec, hf_vec4d out) {
 	out[0] = vec[0];
 	out[1] = vec[1];
 	out[2] = vec[2];
