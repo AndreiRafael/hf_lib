@@ -177,8 +177,7 @@ void hf_transform3f_projection_perspective_size(float w, float h, float near, fl
 }
 
 void hf_transform3f_projection_perspective_fov(float fov_rad, float aspect_ratio, float near, float far, hf_mat4f out) {
-    hf_vec2f fov_dir = { cosf(fov_rad), sinf(fov_rad) };
-    float h = hf_vec2f_dot((hf_vec2f) { 0.f, near }, fov_dir);
+    float h = near / (cosf(fov_rad / 2.f) / sinf(fov_rad / 2.f));
     float w = h * aspect_ratio;
     hf_transform3f_projection_perspective_size(w, h, near, far, out);
 }
