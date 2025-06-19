@@ -2,6 +2,9 @@
 
 #include <math.h>
 
+#define HF_TRANSFORM_PI (3.14159265358979323846)
+#define HF_TRANSFORM_PI_2 (HF_TRANSFORM_PI / 2.0)
+
 void hf_transform2f_translation(hf_vec2f vec, hf_mat3f out) {
     hf_mat3f_identity(out);
     out[2][0] = vec[0];
@@ -174,8 +177,8 @@ void hf_transform3f_projection_perspective_size(float w, float h, float near, fl
 }
 
 void hf_transform3f_projection_perspective_fov(float fov_rad, float aspect_ratio, float near, float far, hf_mat4f out) {
-    hf_vec2f fov_dir = { cosf((float)M_PI_2 - fov_rad), sinf((float)M_PI_2 - fov_rad) };
-    float h = hf_vec2f_dot((hf_vec2f) { 0.f,  }, fov_dir);
+    hf_vec2f fov_dir = { cosf(fov_rad), sinf(fov_rad) };
+    float h = hf_vec2f_dot((hf_vec2f) { 0.f, near }, fov_dir);
     float w = h * aspect_ratio;
     hf_transform3f_projection_perspective_size(w, h, near, far, out);
 }
