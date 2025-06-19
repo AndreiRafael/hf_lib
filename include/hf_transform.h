@@ -27,6 +27,7 @@ void hf_transform3f_apply(hf_vec3f vec, hf_mat4f mat, hf_vec3f out);// returns v
 
 void hf_transform3f_projection_orthographic_size(float w, float h, float near, float far, hf_mat4f out);
 void hf_transform3f_projection_perspective_size(float w, float h, float near, float far, hf_mat4f out);
+void hf_transform3f_projection_perspective_fov(float fov, float aspect_ratio, float near, float far, hf_mat4f out);
 void hf_transform3f_view(hf_vec3f position, hf_vec3f forward, hf_vec3f up, hf_mat4f out);
 
 #endif// HF_TRANSFORM_H
